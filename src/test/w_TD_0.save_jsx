@@ -1,0 +1,65 @@
+import React from 'react';
+
+import { createGuid, WhatKeyNotShow, getColor_Crit } from '../core/core_Function.jsx'
+import Single_Coll from '../controls/single_coll.jsx'
+import Two_Coll from '../controls/two_coll.jsx'
+
+
+const _Debuge = false;
+
+export default class w_TD_0 extends React.Component {
+    constructor(props) {
+        super(props);
+        this.get_Up = this.get_Up.bind(this);
+        this.state = {
+            el:this.props.el,
+            isPL_View: true,
+            isPUMP_View: true,
+            isTSO_View: true,
+
+        }
+    }
+    componentDidUpdate(prevProps) {
+        if (this.props.el != prevProps.el) {
+            this.setState({ el: this.props.el });
+        }
+    }
+    get_Up(el) {
+        let isView = true;
+        switch (el.main_type) {
+            case "pl": {
+                isView = this.state.isPL_View;
+                break;
+            }
+            case "pump": {
+                isView = this.state.isPUMP_View;
+                break;
+            }
+            case "fr":
+            case "cash":
+            case "td":
+            case "msc":
+            case "tso": {
+                isView = this.state.isTSO_View;
+                break;
+            }
+            default: {
+                isView = true;
+                break;
+            }
+        }
+        return isView;
+    }
+    render() {
+
+        return (
+            <td key={createGuid()} colSpan='2' id='style_TD'>
+                <Single_Coll el={this.state.el}
+                    setFilter={this.props.setFilter} UP={this.get_Up(this.state.el)}
+                    _Debuge_Show_Code={this.props._Debuge_Show_Code}
+                    _Debuge_Show_Crit={this.props._Debuge_Show_Crit}
+                />
+            </td>
+        );
+    }
+}
