@@ -10,23 +10,10 @@ import AZS_Image from '../../controls/AZS_Image.jsx'
 
 import W_prop_value from '../prop_value_new.jsx'
 
-function cope_Mass(MASSIV) {
-    if (MASSIV != null) {
-        let NEW_MASSIV = new Array();
-        for (const iterator of MASSIV) {
-            NEW_MASSIV.push(iterator);
-        }
-        return NEW_MASSIV;
-    }
-    return null;
-}
+
 const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
-
-let timerId;
-
 const _Debuge_Message = true;
-
 const _Debuge = false;
 
 function get_PL(id, nameCommand) {
@@ -185,7 +172,6 @@ function get_dvc_Image(el) {
     }
 }
 
-
 export default class trk_Head_new extends React.Component {
     constructor(props) {
         super(props);
@@ -199,13 +185,14 @@ export default class trk_Head_new extends React.Component {
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        this.is_Choose = this.is_Choose.bind(this);
+        //this.is_Choose = this.is_Choose.bind(this);
         /******** WS******************** */
 
         this.state = {
             OBJ: this.props.OBJ,
             self_ID: this.props.OBJ.dvc_id,
             dvc_text: this.props.OBJ.key_value,
+            status_text: "",
 
             is_View: this.props.is_View,
 
@@ -215,6 +202,7 @@ export default class trk_Head_new extends React.Component {
             azs: this.props.azs,
 
             message: "",
+
             /******** WS******************** */
             Ws: WS,
             connection: null,
@@ -225,26 +213,43 @@ export default class trk_Head_new extends React.Component {
         }
     }
     componentDidMount() {
-        this.SET_PROPS_PL(this.props.OBJ);
-        this.setState({ List_dvc_azs: cope_Mass(this.props.list_dvc_azs) }
-            //, this.start_ws()
-        );
-        setTimeout(() => this.start_ws(), 10000);// 60000- 1мин
-    }
-
-    SET_PROPS_PL(OBJ, data) {
-        if (OBJ.dvc_id == this.state.self_ID && data != null) {
-            this.SET_VALUE_ODJ(data, OBJ);
+        try {
+            this.SET_PROPS_PL();
+            this.start_ws();
+        } catch (e) {
         }
-        if (OBJ.dvc_id == this.state.self_ID) {
-            this.setState({ status_text: get_status_text(OBJ) });                  //nm ШАПКА
-            this.setState({ ai_Image_Centr: get_Image_Centr(OBJ) });                        //ТОПЛИВО
-            this.setState({ ai_Image_L: get_ai_Image_L(this.state._Fuels, OBJ) });
-            this.setState({ ai_Image_R: get_ai_Image_R(this.state._Fuels, OBJ) });
-            this.setState({ dvc_Image: get_dvc_Image(OBJ) });
-            this.setState({ lock_Image: get_lock(OBJ) });                                   // ЗАМОК
-            this.setState({ style_Stage: (parseInt(OBJ.state_trk) >= 3) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
-            this.setState({ style_Text: get_status_text_color(OBJ) });
+    }
+    componentDidUpdate(prevProps) {
+
+        if (this.props.is_View != prevProps.is_View) {
+            this.setState({ is_View: this.props.is_View });
+        }
+        if (this.props.visible != prevProps.visible) {
+            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
+        }
+        if (this.props.OBJ != prevProps.OBJ) {
+            this.setState({ OBJ: this.props.OBJ }, this.SET_PROPS_PL());
+        }
+    }
+    componentWillUnmount() {
+        if (this.state.connection != null) {
+            this.state.connection.close();
+        }
+        this.stop_ws();
+    }
+    SET_PROPS_PL(data) {
+        if (this.state.OBJ.dvc_id == this.state.self_ID && data != null) {
+            this.SET_VALUE_ODJ(data);
+        }
+        if (this.state.OBJ.dvc_id == this.state.self_ID) {
+            this.setState({ status_text: get_status_text(this.state.OBJ) });                  //nm ШАПКА
+            this.setState({ ai_Image_Centr: get_Image_Centr(this.state.OBJ) });                        //ТОПЛИВО
+            this.setState({ ai_Image_L: get_ai_Image_L(this.state._Fuels, this.state.OBJ) });
+            this.setState({ ai_Image_R: get_ai_Image_R(this.state._Fuels, this.state.OBJ) });
+            this.setState({ dvc_Image: get_dvc_Image(this.state.OBJ) });
+            this.setState({ lock_Image: get_lock(this.state.OBJ) });                                   // ЗАМОК
+            this.setState({ style_Stage: (parseInt(this.state.OBJ.state_trk) >= 3) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
+            this.setState({ style_Text: get_status_text_color(this.state.OBJ) });
 
         } else {
             alert("ERROR!!! self_ID");
@@ -281,7 +286,7 @@ export default class trk_Head_new extends React.Component {
         }
         return _fuel;
     }
-    async SET_VALUE_ODJ(data, OBJ) {
+    SET_VALUE_ODJ(data) {
         if (this.state.list_data != null) {
             let DATA = JSON.parse(data);
             if (DATA.id == this.state.self_ID) {
@@ -304,20 +309,20 @@ export default class trk_Head_new extends React.Component {
                             switch (data_val.typ) {
                                 case "STATE_PL":
                                     {
-                                        OBJ.state_pl = data_val.val;
+                                        this.state.OBJ.state_pl = data_val.val;
                                         break;
                                     }
                                 case "WATER_LEVEL":
                                     {
-                                        OBJ.water_level = data_val.val;
+                                        this.state.OBJ.water_level = data_val.val;
                                         //this.setState({ dvc_Image: get_dvc_Image(OBJ.water_level, OBJ.state_pl, data_val.crit) });     // ТАНК
-                                        OBJ.crit = data_val.crit;
+                                        this.state.OBJ.crit = data_val.crit;
                                         break;
                                     }
-                                case "STATE_SHIFT": OBJ.state_shift = data_val.val; break;
+                                case "STATE_SHIFT": this.state.OBJ.state_shift = data_val.val; break;
                                 case "STATUS_TRK":
                                     {
-                                        OBJ.state_trk = data_val.val;
+                                        this.state.OBJ.state_trk = data_val.val;
                                         break;
                                     }
                                 case "nozzle":
@@ -326,7 +331,7 @@ export default class trk_Head_new extends React.Component {
                                             iterator.key_value = " ";
                                         }
                                         if (data_val.val != 0) {
-                                            let _fuel = await this.get_Fuel_Code(data, data_val, this.state.azs);
+                                            let _fuel = this.get_Fuel_Code(data, data_val, this.state.azs);
                                             data_val.fuel = _fuel;
                                         } else {
                                             data_val.fuel = 0;
@@ -346,18 +351,6 @@ export default class trk_Head_new extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-
-        if (this.props.is_View != prevProps.is_View) {
-            this.setState({ is_View: this.props.is_View });
-        }
-        if (this.props.visible != prevProps.visible) {
-            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
-        }
-    }
-    componentWillUnmount() {
-        this.stop_ws();
-    }
 
     /***Команды*********************** */
     async toock(el) {///Отправка команды
@@ -424,33 +417,7 @@ export default class trk_Head_new extends React.Component {
     /***Команды*********************** */
 
     /******** WS******************** */
-    is_Choose(visible) {
-        if (visible) {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.stop_ws();
-        } else {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.restart();
-        }
-    }
-    restart() {
-        if (_Is_Run_WS) {
-            if (this.state.connection != null && this.state.IsOpen) {
-                if (_Debug_Is_Run_WS) {
-                    alert(" restart self_ID = " + this.state.visible + " - " + this.state.self_ID)
-                }
-                this.state.connection.close(1000, "Hello Web Sockets!");
-                this.setState({ IsOpen: false, connection: null, data: null });
-                /************************ */
-                timerId = setInterval(() => this.start_ws(), 10000);
-                /************************ */
-            }
-        }
-    }
+    
     start_ws(e) {
 
         if (_Is_Run_WS) {
@@ -469,10 +436,7 @@ export default class trk_Head_new extends React.Component {
                             try {
 
                                 if (evt.data != "") {
-                                    //if (_Debug_Is_Run_WS) {
-                                    //    alert("data self_ID = " +  this.state.visible + " - " +  this.state.self_ID)
-                                    //}
-                                    this.SET_PROPS_PL(this.state.OBJ, evt.data);
+                                    this.SET_PROPS_PL(evt.data);
                                 }
                                 else {
                                     let r = 0;
@@ -497,8 +461,6 @@ export default class trk_Head_new extends React.Component {
                 let m = new Array();
                 m.push(this.state.self_ID);
                 let MS = get_Json_String(m);
-
-                //let MS = get_Json_String(this.props.list_dvc_id);
                 this.state.connection.send(MS);
                 this.setState({ messages: "", IsOpen: true })
 
@@ -507,12 +469,19 @@ export default class trk_Head_new extends React.Component {
     }
     stop_ws(e) {
 
-        if (this.state.IsOpen) {
-            if (_Debug_Is_Run_WS) {
-                alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
+        try {
+            if (this.state.connection != null || this.state.IsOpen) {
+
+                if (_Debug_Is_Run_WS) {
+                    alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
+                }
+                this.state.connection.close(1000, "Hello Web Sockets!");
+                if (this.state.connection.readyState >= 2) {
+                    this.setState({ connection: null, data: null, IsOpen: false });
+                }
             }
-            this.state.connection.close(1000, "Hello Web Sockets!");
-            timerId = setInterval(() => this.setState({ connection: null, data: null, IsOpen: false }), 1000);
+        } catch (e) {
+
         }
     }
     add_messages(e) {
@@ -543,17 +512,6 @@ export default class trk_Head_new extends React.Component {
 
             whiteSpace: "nowrap",
         }
-
-        //height="27px" align="center"
-        /*
-        let _bgcolor = 'white';
-        if (this.props.el.crit != null) {
-            let Crit = parseInt(this.props.el.crit);
-            if (!isNaN(Crit)) {
-                _bgcolor = getColor_Crit(Crit);
-            }
-        }*/
-
         let style_td_D = {
             background: 'white',
             textAlign: 'left',

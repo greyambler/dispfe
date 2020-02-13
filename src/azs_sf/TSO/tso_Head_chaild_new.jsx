@@ -13,20 +13,9 @@ import W_tso_camera from '../TSO/tso_camera.jsx'
 import W_tso_Table_Props_new from '../TSO/tso_Table_Props_new.jsx'
 
 
-function cope_Mass(MASSIV) {
-    if (MASSIV != null) {
-        let NEW_MASSIV = new Array();
-        for (const iterator of MASSIV) {
-            NEW_MASSIV.push(iterator);
-        }
-        return NEW_MASSIV;
-    }
-    return null;
-}
 const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
 
-let timerId;
 
 const _Debuge_Message = false;
 
@@ -92,15 +81,15 @@ export default class tso_Head_chaild_new extends React.Component {
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        this.is_Choose = this.is_Choose.bind(this);
+        //this.is_Choose = this.is_Choose.bind(this);
         /******** WS******************** */
-
 
         this.state = {
 
             OBJ: this.props.OBJ,
             self_ID: this.props.OBJ.dvc_id,
             dvc_text: this.props.OBJ.key_value,
+            status_text: "",
 
             is_View: this.props.is_View,
 
@@ -116,39 +105,53 @@ export default class tso_Head_chaild_new extends React.Component {
             IsOpen: false,
             visible: this.props.visible,
             azs: this.props.azs,
-
-
             /******** WS******************** */
         }
     }
     componentDidMount() {
-        this.SET_PROPS_PL(this.props.OBJ);
-        this.setState({ List_dvc_azs: cope_Mass(this.props.list_dvc_azs) }
-            //, this.start_ws()
-        );
-        setTimeout(() => this.start_ws(), 3000);// 60 000- 1мин
+        try {
+            this.SET_PROPS_PL();
+            this.start_ws();
+        } catch (e) {
+        }
+    }
+    componentDidUpdate(prevProps) {
+        if (this.props.is_View != prevProps.is_View) {
+            this.setState({ is_View: this.props.is_View });
+        }
+        if (this.props.visible != prevProps.visible) {
+            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
+        }
+        if (this.props.OBJ != prevProps.OBJ) {
+            this.setState({ OBJ: this.props.OBJ }, this.SET_PROPS_PL());
+        }
+    }
+    componentWillUnmount() {
+        if (this.state.connection != null) {
+            this.state.connection.close();
+        }
+        this.stop_ws();
     }
 
-
-    SET_PROPS_PL(OBJ, data) {
-        if (OBJ.dvc_id == this.state.self_ID && data != null) {
-            this.SET_VALUE_ODJ(data, OBJ);
+    SET_PROPS_PL(data) {
+        if (this.state.OBJ.dvc_id == this.state.self_ID && data != null) {
+            this.SET_VALUE_ODJ(data);
         }
-        if (OBJ.dvc_id == this.state.self_ID) {
-            this.setState({ status_text: get_status_text(OBJ.state_shift) });                  //nm ШАПКА
+        if (this.state.OBJ.dvc_id == this.state.self_ID) {
+            this.setState({ status_text: get_status_text(this.state.OBJ.state_shift) });                  //nm ШАПКА
 
-            this.setState({ dvc_Image: get_dvc_Image(OBJ.water_level, OBJ.state_pl) });     // ТАНК
-            this.setState({ lock_Image: get_lock(OBJ.state_shift) });                          // ЗАМОК
-            this.setState({ close_Image: get_close(OBJ.state_shift) });
+            this.setState({ dvc_Image: get_dvc_Image(this.state.OBJ.water_level, this.state.OBJ.state_pl) });     // ТАНК
+            this.setState({ lock_Image: get_lock(this.state.OBJ.state_shift) });                          // ЗАМОК
+            this.setState({ close_Image: get_close(this.state.OBJ.state_shift) });
 
-            this.setState({ style_Stage: (parseInt(OBJ.state_shift) == 3) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
-            this.setState({ style_Text: (parseInt(OBJ.state_shift) == 3) ? 'white' : 'black' });
+            this.setState({ style_Stage: (parseInt(this.state.OBJ.state_shift) == 3) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
+            this.setState({ style_Text: (parseInt(this.state.OBJ.state_shift) == 3) ? 'white' : 'black' });
 
         } else {
             alert("ERROR!!! self_ID");
         }
     }
-    async SET_VALUE_ODJ(data, OBJ) {
+    async SET_VALUE_ODJ(data) {
         if (this.state.list_data != null) {
             let DATA = JSON.parse(data);
             if (DATA.id == this.state.self_ID) {
@@ -171,7 +174,7 @@ export default class tso_Head_chaild_new extends React.Component {
                             switch (data_val.typ) {
                                 case "STATE_PL":
                                     {
-                                        OBJ.state_pl = data_val.val;
+                                        this.state.OBJ.state_pl = data_val.val;
                                         break;
                                     }
                                 case "STATE_TSO":
@@ -185,15 +188,15 @@ export default class tso_Head_chaild_new extends React.Component {
                                     }
                                 case "WATER_LEVEL":
                                     {
-                                        OBJ.water_level = data_val.val;
+                                        this.state.OBJ.water_level = data_val.val;
                                         //this.setState({ dvc_Image: get_dvc_Image(OBJ.water_level, OBJ.state_pl, data_val.crit) });     // ТАНК
-                                        OBJ.crit = data_val.crit;
+                                        this.state.OBJ.crit = data_val.crit;
                                         break;
                                     }
-                                case "STATE_SHIFT": OBJ.state_shift = data_val.val; break;
+                                case "STATE_SHIFT": this.state.OBJ.state_shift = data_val.val; break;
                                 case "STATUS_TRK":
                                     {
-                                        OBJ.state_trk = data_val.val;
+                                        this.state.OBJ.state_trk = data_val.val;
                                         break;
                                     }
                             }
@@ -209,18 +212,7 @@ export default class tso_Head_chaild_new extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-
-        if (this.props.is_View != prevProps.is_View) {
-            this.setState({ is_View: this.props.is_View });
-        }
-        if (this.props.visible != prevProps.visible) {
-            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
-        }
-    }
-    componentWillUnmount() {
-        this.stop_ws();
-    }
+    
 
 
     /***Команды*********************** */
@@ -311,33 +303,7 @@ export default class tso_Head_chaild_new extends React.Component {
     /***Команды*********************** */
 
     /******** WS******************** */
-    is_Choose(visible) {
-        if (visible) {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.stop_ws();
-        } else {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.restart();
-        }
-    }
-    restart() {
-        if (_Is_Run_WS) {
-            if (this.state.connection != null && this.state.IsOpen) {
-                if (_Debug_Is_Run_WS) {
-                    alert(" restart self_ID = " + this.state.visible + " - " + this.state.self_ID)
-                }
-                this.state.connection.close(1000, "Hello Web Sockets!");
-                this.setState({ IsOpen: false, connection: null, data: null });
-                /************************ */
-                timerId = setInterval(() => this.start_ws(), 10000);
-                /************************ */
-            }
-        }
-    }
+    
     start_ws(e) {
         if (_Is_Run_WS) {
             if (this.state.self_ID != null && !this.state.visible) {
@@ -355,10 +321,7 @@ export default class tso_Head_chaild_new extends React.Component {
                             try {
 
                                 if (evt.data != "") {
-                                    //this.full_Key_Value(JSON.parse(evt.data));
-                                    //this.Set_Prop(Data_Read(evt.data, this.state.EL, this.props.azs));
-                                    //this.Set_Data(evt.data);
-                                    this.SET_PROPS_PL(this.state.OBJ, evt.data);
+                                    this.SET_PROPS_PL(evt.data);
                                 }
                                 else {
                                     let r = 0;
@@ -380,21 +343,9 @@ export default class tso_Head_chaild_new extends React.Component {
                     alert(" OnOpen self_ID = " + this.state.visible + " - " + this.state.self_ID)
                 }
 
-                /*                 let m = new Array();
-                                m.push(this.state.OBJ.dvc_id);
-                
-                                if (this.state.OBJ.dvc_id_m != null) {
-                                    for (const iterator of this.state.OBJ.dvc_id_m) {
-                                        m.push(iterator);
-                                    }
-                                }
-                 */
                 let m = new Array();
                 m.push(this.state.self_ID);
                 let MS = get_Json_String(m);
-
-
-                //let MS = get_Json_String(this.state.list_dvc_id);
                 this.state.connection.send(MS);
                 this.setState({ messages: "", IsOpen: true })
 
@@ -402,14 +353,20 @@ export default class tso_Head_chaild_new extends React.Component {
         }
     }
     stop_ws(e) {
-        if (this.state.IsOpen) {
-            if (_Debug_Is_Run_WS) {
-                alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.state.connection.close(1000, "Hello Web Sockets!");
-            this.setState({ connection: null, data: null, IsOpen: false });
-        }
+        try {
+            if (this.state.connection != null || this.state.IsOpen) {
 
+                if (_Debug_Is_Run_WS) {
+                    alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
+                }
+                this.state.connection.close(1000, "Hello Web Sockets!");
+                if (this.state.connection.readyState >= 2) {
+                    this.setState({ connection: null, data: null, IsOpen: false });
+                }
+            }
+        } catch (e) {
+
+        }
     }
     add_messages(e) {
         if (e != null) {
@@ -460,7 +417,7 @@ export default class tso_Head_chaild_new extends React.Component {
 
             //whiteSpace: "nowrap",
         }
-        
+
         //let VAL = (this.state.dvc_text.length < 14) ? this.state.dvc_text : this.state.dvc_text.substring(0, 14);
 
         return (

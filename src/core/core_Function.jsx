@@ -1,6 +1,7 @@
 import { isArray } from "util";
 
-const _Release = true;
+const _Release = false;
+export const _IS_NEW = true;  // true  false
 
 const IP_Server = (_Release)
     ? "http://" + window.location.host

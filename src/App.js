@@ -13,8 +13,8 @@ import {
 
 
 import {
-  demoAsyncCall, saveToken, RSS_AZS_EDIT, set_Curent_Login, get_Curent_Login,
-  refreshPage, createGuid, compare_azs_iid, Init_DVC, RSS_List_Main, Get_FIRST_COLL_Single
+  demoAsyncCall,
+  _IS_NEW, saveToken, RSS_AZS_EDIT, set_Curent_Login, get_Curent_Login, refreshPage, createGuid, compare_azs_iid, Init_DVC, RSS_List_Main, Get_FIRST_COLL_Single
 } from './core/core_Function.jsx'
 
 import history from "./controls/history";
@@ -53,10 +53,6 @@ import { Stage, Layer, Rect, Text, Circle, Shape } from 'react-konva';
 const _Debuge_TestMenu = false;
 
 const _Debuge = false;  // true;
-const _IS_NEW = true;  // true;
-
-
-
 
 
 class Filter_Sidebar_Main extends Component {

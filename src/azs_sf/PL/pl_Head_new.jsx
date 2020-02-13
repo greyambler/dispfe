@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { get_Num, getColor_Crit, POST, WS, get_Json_String, Data_Read, createGuid, Get_PROPS_Single } from '../../core/core_Function.jsx'
+import {
+    get_Num, getColor_Crit, POST, WS, get_Json_String, Data_Read,
+    createGuid, Get_PROPS_Single, IS_PL_View,
+} from '../../core/core_Function.jsx'
 
 import { Stage, Layer, Rect, Text, Line, Circle, Shape, Image } from 'react-konva';
 import Konva from "konva";
@@ -8,27 +11,12 @@ import Konva from "konva";
 import AZS_Image from '../../controls/AZS_Image.jsx'
 
 import W_prop_value from '../prop_value_new.jsx'
-import W_prop_value_old from '../prop_value.jsx'
 
+//import W_prop_value_old from '../prop_value.jsx'
 
-
-function cope_Mass(MASSIV) {
-    if (MASSIV != null) {
-        let NEW_MASSIV = new Array();
-        for (const iterator of MASSIV) {
-            NEW_MASSIV.push(iterator);
-        }
-        return NEW_MASSIV;
-    }
-    return null;
-}
 const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
-
-let timerId;
-
 const _Debuge_Message = true;
-
 const _Debuge = false;
 
 function get_PL(id, nameCommand) {
@@ -87,7 +75,6 @@ function get_status_text(state_pl) {
     }
     return 'Нет связи';
 }
-
 function get_dvc_Image(water_level, state_pl, crit) {
     if (parseInt(state_pl) == 1) {
         switch (parseInt(crit)) {
@@ -110,12 +97,11 @@ export default class pl_Head_new extends React.Component {
         this.SET_PROPS_PL = this.SET_PROPS_PL.bind(this);
         this.SET_VALUE_ODJ = this.SET_VALUE_ODJ.bind(this);
 
-
         /******** WS******************** */
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        this.is_Choose = this.is_Choose.bind(this);
+        //this.is_Choose = this.is_Choose.bind(this);
         /******** WS******************** */
 
         this.state = {
@@ -123,6 +109,7 @@ export default class pl_Head_new extends React.Component {
             OBJ: this.props.OBJ,
             self_ID: this.props.OBJ.dvc_id,
             dvc_text: this.props.OBJ.key_value,
+            status_text: "",
 
             is_View: this.props.is_View,
 
@@ -130,6 +117,7 @@ export default class pl_Head_new extends React.Component {
             list_data: this.props.list_data,
 
             message: "",
+
             /******** WS******************** */
             Ws: WS,
             connection: null,
@@ -137,34 +125,57 @@ export default class pl_Head_new extends React.Component {
             IsOpen: false,
             visible: this.props.visible,
             /******** WS******************** */
-
         }
     }
     componentDidMount() {
-        this.SET_PROPS_PL(this.props.OBJ);
-        this.setState({ List_dvc_azs: cope_Mass(this.props.list_dvc_azs) }
-            //, this.start_ws()
-        );
-        setTimeout(() => this.start_ws(), 5000);// 60000- 1мин
+        try {
+            this.SET_PROPS_PL();
+            //setTimeout(() => this.start_ws(), 10000);// 60000- 1мин
+            this.start_ws();
+        } catch (e) {
+        }
+    }
+    componentDidUpdate(prevProps, prevState) {
+
+        if (this.props.is_View != prevProps.is_View) {
+            this.setState({ is_View: this.props.is_View }, this.is_Choose(this.props.visible));
+        }
+        if (this.props.visible != prevProps.visible) {
+            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
+        }
+        if (this.props.OBJ != prevProps.OBJ) {
+            this.setState({ OBJ: this.props.OBJ }, this.SET_PROPS_PL());
+        }
+
+        /*         if (this.state.sliderValue !== prevState.sliderValue) {
+                    global.IS_PL_View = this.state.sliderValue;
+                }
+         */
+    }
+    componentWillUnmount() {
+        if (this.state.connection != null) {
+            this.state.connection.close();
+        }
+        this.stop_ws();
     }
 
-    SET_PROPS_PL(OBJ, data) {
-        if (OBJ.dvc_id == this.state.self_ID && data != null) {
-            this.SET_VALUE_ODJ(data, OBJ);
+    SET_PROPS_PL(data) {
+        if (this.state.OBJ.dvc_id == this.state.self_ID && data != null) {
+            this.SET_VALUE_ODJ(data);
         }
-        if (OBJ.dvc_id == this.state.self_ID) {
-            this.setState({ status_text: get_status_text(OBJ.state_pl) });                  //nm ШАПКА
-            this.setState({ ai_Image: get_ai_Image(this.state._Fuels, OBJ) });              //ТОПЛИВО
-            this.setState({ dvc_Image: get_dvc_Image(OBJ.water_level, OBJ.state_pl, OBJ.crit) });     // ТАНК
-            this.setState({ lock_Image: get_lock(OBJ.state_pl) });                          // ЗАМОК
-            this.setState({ style_Stage: (parseInt(OBJ.state_pl) == 1) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
-            this.setState({ style_Text: (parseInt(OBJ.state_pl) == 1) ? 'white' : 'black' });
+        if (this.state.OBJ.dvc_id == this.state.self_ID) {
+            this.setState({ status_text: get_status_text(this.state.OBJ.state_pl) });                  //nm ШАПКА
+            this.setState({ ai_Image: get_ai_Image(this.state._Fuels, this.state.OBJ) });              //ТОПЛИВО
+            this.setState({ dvc_Image: get_dvc_Image(this.state.OBJ.water_level, this.state.OBJ.state_pl, this.state.OBJ.crit) });     // ТАНК
+            this.setState({ lock_Image: get_lock(this.state.OBJ.state_pl) });                          // ЗАМОК
+            this.setState({ style_Stage: (parseInt(this.state.OBJ.state_pl) == 1) ? { backgroundColor: '#7CA420', overflow: 'hidden' } : { backgroundColor: '#E0E0E0', overflow: 'hidden' } });
+            this.setState({ style_Text: (parseInt(this.state.OBJ.state_pl) == 1) ? 'white' : 'black' });
 
         } else {
             alert("ERROR!!! self_ID");
         }
     }
-    async SET_VALUE_ODJ(data, OBJ) {
+    SET_VALUE_ODJ(data) {
         if (this.state.list_data != null) {
             let DATA = JSON.parse(data);
             if (DATA.id == this.state.self_ID) {
@@ -187,20 +198,20 @@ export default class pl_Head_new extends React.Component {
                             switch (data_val.typ) {
                                 case "STATE_PL":
                                     {
-                                        OBJ.state_pl = data_val.val;
+                                        this.state.OBJ.state_pl = data_val.val;
                                         break;
                                     }
                                 case "WATER_LEVEL":
                                     {
-                                        OBJ.water_level = data_val.val;
+                                        this.state.OBJ.water_level = data_val.val;
                                         //this.setState({ dvc_Image: get_dvc_Image(OBJ.water_level, OBJ.state_pl, data_val.crit) });     // ТАНК
-                                        OBJ.crit = data_val.crit;
+                                        this.state.OBJ.crit = data_val.crit;
                                         break;
                                     }
-                                case "STATE_SHIFT": OBJ.state_shift = data_val.val; break;
+                                case "STATE_SHIFT": this.state.OBJ.state_shift = data_val.val; break;
                                 case "STATUS_TRK":
                                     {
-                                        OBJ.state_trk = data_val.val;
+                                        this.state.OBJ.state_trk = data_val.val;
                                         break;
                                     }
                             }
@@ -213,18 +224,6 @@ export default class pl_Head_new extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-
-        if (this.props.is_View != prevProps.is_View) {
-            this.setState({ is_View: this.props.is_View });
-        }
-        if (this.props.visible != prevProps.visible) {
-            this.setState({ visible: this.props.visible }, this.is_Choose(this.props.visible));
-        }
-    }
-    componentWillUnmount() {
-        this.stop_ws();
-    }
 
     /***Команды*********************** */
     async toock(el) {///Отправка команды
@@ -291,40 +290,46 @@ export default class pl_Head_new extends React.Component {
     /***Команды*********************** */
 
     /******** WS******************** */
-    is_Choose(visible) {
-        if (visible) {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.stop_ws();
-        } else {
-            if (_Debug_Is_Run_WS) {
-                alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-            }
-            this.restart();
-        }
-    }
-    restart() {
-        if (_Is_Run_WS) {
-            if (this.state.connection != null && this.state.IsOpen) {
-                if (_Debug_Is_Run_WS) {
-                    alert(" restart self_ID = " + this.state.visible + " - " + this.state.self_ID)
-                }
-                this.state.connection.close(1000, "Hello Web Sockets!");
-                this.setState({ IsOpen: false, connection: null, data: null });
-                /************************ */
-                timerId = setInterval(() => this.start_ws(), 10000);
-                /************************ */
-            }
-        }
-    }
+    /*   is_Choose(visible) {
+          if (visible) {
+              if (_Debug_Is_Run_WS) {
+                  alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
+              }
+              this.stop_ws();
+          } else {
+              if (_Debug_Is_Run_WS) {
+                  alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
+              }
+              this.restart();
+          } 
+      }
+       async restart() {
+          try {
+              if (_Is_Run_WS) {
+                  if (this.state.connection != null && this.state.IsOpen) {
+                      if (_Debug_Is_Run_WS) {
+                          alert(" restart self_ID = " + this.state.visible + " - " + this.state.self_ID)
+                      }
+                      await this.state.connection.close(1000, "Hello Web Sockets!");
+                      this.setState({ IsOpen: false, connection: null, data: null });
+  
+                      await setInterval(() => this.start_ws(), 10000);
+  
+                  }
+              }
+          } catch (e) {
+          }
+      } */
+
     start_ws(e) {
         if (_Is_Run_WS) {
             if (this.state.self_ID != null && !this.state.visible) {
                 if (this.state.connection == null) {
+
                     if (_Debug_Is_Run_WS) {
                         alert(" start_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
                     }
+
                     this.state.connection = new WebSocket(this.state.Ws);
                     this.state.connection.onopen = evt => { this.OnOpen(evt.data) }//{ this.add_messages(evt.data) }
                     this.state.connection.onclose = evt => { this.add_messages(evt.data) }
@@ -333,16 +338,15 @@ export default class pl_Head_new extends React.Component {
                     this.state.connection.onmessage = evt => {
                         if (evt.data != null) {
                             try {
-
                                 if (evt.data != "") {
-                                    this.SET_PROPS_PL(this.state.OBJ, evt.data);
+                                    this.SET_PROPS_PL(evt.data);
                                 }
                                 else {
                                     let r = 0;
                                 }
                             } catch (error) {
-                                console.log('******WS******************' + error);
-                                console.log('******WS******************' + evt.data);
+                                console.log('*WS*' + error);
+                                console.log('*WS*' + evt.data);
                             }
                         }
                     }
@@ -369,13 +373,19 @@ export default class pl_Head_new extends React.Component {
         }
     }
     stop_ws(e) {
+        try {
+            if (this.state.connection != null || this.state.IsOpen) {
 
-        if (this.state.IsOpen) {
-            if (_Debug_Is_Run_WS) {
-                alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
+                if (_Debug_Is_Run_WS) {
+                    alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
+                }
+                this.state.connection.close(1000, "Hello Web Sockets!");
+
+                if (this.state.connection.readyState >= 2) {
+                    this.setState({ connection: null, data: null, IsOpen: false });
+                }
             }
-            this.state.connection.close(1000, "Hello Web Sockets!");
-            timerId = setInterval(() => this.setState({ connection: null, data: null, IsOpen: false }), 1000);
+        } catch (e) {
         }
     }
     add_messages(e) {
@@ -386,9 +396,7 @@ export default class pl_Head_new extends React.Component {
             });
         }
     }
-
     /******** WS******************** */
-
 
     render() {
         let S_width = 120;
@@ -407,7 +415,6 @@ export default class pl_Head_new extends React.Component {
 
             whiteSpace: "nowrap",
         }
-
         let style_td_D = {
             background: 'white',
             textAlign: 'left',
@@ -417,6 +424,9 @@ export default class pl_Head_new extends React.Component {
             align: "left",
             fontSize: "9px",
         }
+
+        let rrr = global.IS_PL_View;
+
         return (
             <center title={this.state.message}>
                 <Stage width={S_width} height={S_height} style={this.state.style_Stage}>
@@ -482,8 +492,8 @@ export default class pl_Head_new extends React.Component {
                     </table>
                 }
 
-
                 {this.state.is_View && this.state.list_data != null &&
+                    //global.IS_PL_View &&
                     <table width="99%"  >
                         <tbody>
 
