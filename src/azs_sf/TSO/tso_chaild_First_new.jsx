@@ -1,10 +1,5 @@
 import React from 'react';
 
-import { get_Num } from '../../core/core_Function.jsx'
-import { Stage, Layer, Rect, Text, Circle, Shape, Image } from 'react-konva';
-
-import AZS_Image from '../../controls/AZS_Image.jsx'
-
 export default class tso_chaild_First_new extends React.Component {
     constructor(props) {
         super(props);
@@ -32,7 +27,7 @@ export default class tso_chaild_First_new extends React.Component {
             background: 'white',
             height: '50px',
             width: '100%',
-            minWidth:'200px',
+            minWidth: '200px',
             verticalAlign: 'top',
             textAlign: 'center',
             border: '1px solid #F0F0F0',

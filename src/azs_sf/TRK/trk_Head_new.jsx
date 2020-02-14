@@ -1,17 +1,11 @@
 import React from 'react';
-
-import { get_Num, getColor_Crit, POST, get_Curent_Login, WS, get_Json_String, Data_Read, createGuid } from '../../core/core_Function.jsx'
-
-import { Stage, Layer, Rect, Text, Line, Circle, Shape, Image } from 'react-konva';
-
-import Konva from "konva";
+import { POST, WS, get_Json_String } from '../../core/core_Function.jsx'
+import { Stage, Layer, Rect, Text } from 'react-konva';
 
 import AZS_Image from '../../controls/AZS_Image.jsx'
+import Data_Property_TRK from "./Data_Property_TRK.jsx";
 
-import W_prop_value from '../prop_value_new.jsx'
-
-
-const _Is_Run_WS = true;
+const _Is_Run_WS = false;
 const _Debug_Is_Run_WS = false;
 const _Debuge_Message = true;
 const _Debuge = false;
@@ -172,6 +166,7 @@ function get_dvc_Image(el) {
     }
 }
 
+
 export default class trk_Head_new extends React.Component {
     constructor(props) {
         super(props);
@@ -181,12 +176,12 @@ export default class trk_Head_new extends React.Component {
         this.SET_PROPS_PL = this.SET_PROPS_PL.bind(this);
         this.SET_VALUE_ODJ = this.SET_VALUE_ODJ.bind(this);
 
-        /******** WS******************** */
+        // WS
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        //this.is_Choose = this.is_Choose.bind(this);
-        /******** WS******************** */
+        
+        // WS
 
         this.state = {
             OBJ: this.props.OBJ,
@@ -203,13 +198,13 @@ export default class trk_Head_new extends React.Component {
 
             message: "",
 
-            /******** WS******************** */
+            // WS
             Ws: WS,
             connection: null,
             messages: [],
             IsOpen: false,
             visible: this.props.visible,
-            /******** WS******************** */
+            // WS
         }
     }
     componentDidMount() {
@@ -352,7 +347,8 @@ export default class trk_Head_new extends React.Component {
     }
 
 
-    /***Команды*********************** */
+    // Команды
+
     async toock(el) {///Отправка команды
 
         let rss = POST;
@@ -414,10 +410,11 @@ export default class trk_Head_new extends React.Component {
     show_Message(text) {
         this.setState({ message: text });
     }
-    /***Команды*********************** */
-
-    /******** WS******************** */
     
+    // Команды
+
+    // WS
+
     start_ws(e) {
 
         if (_Is_Run_WS) {
@@ -493,7 +490,7 @@ export default class trk_Head_new extends React.Component {
         }
     }
 
-    /******** WS******************** */
+    // WS
 
     render() {
         let S_width = 120;
@@ -567,7 +564,6 @@ export default class trk_Head_new extends React.Component {
                     </Layer>
                 </Stage>
 
-
                 {_Debuge &&
                     <table>
                         <tbody>
@@ -577,50 +573,23 @@ export default class trk_Head_new extends React.Component {
                             <tr>
                                 <td style={style_td_D}>{"self_ID - " + this.state.OBJ.dvc_id}</td>
                             </tr>
-                            {/* <tr>
-                                <td style={style_td_D}>{"key - " + this.state.OBJ.key}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"key_value - " + this.state.OBJ.key_value}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"main_type - " + this.state.OBJ.main_type}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"type - " + this.state.OBJ.type}</td>
-                            </tr> */}
+
+
+
                             <tr>
                                 <td style={style_td_D}>{"crit - " + this.state.OBJ.crit}</td>
                             </tr>
                             <tr>
                                 <td style={style_td_D}>{"dvc_id - " + this.state.OBJ.dvc_id}</td>
                             </tr>
-                            {/*                             <tr>
-                                <td style={style_td_D}>{"dvc_id_m - " + get_Json_String(this.state.OBJ.dvc_id_m)}</td>
-                            </tr>
- */}                        </tbody>
-                    </table>
-                }
 
-
-                {this.state.is_View && this.state.list_data != null &&
-                    <table width="99%">
-                        <tbody>
-                            {
-                                this.state.list_data.map(item => {
-                                    return (
-                                        <tr key={createGuid()}>
-                                            <td key={createGuid()} style={style_td}>
-                                                <W_prop_value item={item} />
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
 
                         </tbody>
                     </table>
                 }
+
+                <Data_Property_TRK list_book={this.state.list_data} />
+
             </center>
         );
     }

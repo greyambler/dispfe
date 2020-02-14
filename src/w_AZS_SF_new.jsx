@@ -1,16 +1,5 @@
 import React from 'react';
-
-import { Element, animateScroll as scroll } from 'react-scroll'
-
-import {
-    RSS_List_Main, RSS_AZS,
-    Get_FIRST_COLL_Single,
-    Get_Main_PROPS_AZS_Single
-} from './core/core_Function.jsx'
-
-
-import W_table_azs from './azs_sf/w_table_azs_new.jsx'
-
+import { RSS_List_Main, Get_FIRST_COLL_Single } from './core/core_Function.jsx'
 import W_main_azs_new from './azs_sf/w_main_azs_new.jsx'
 
 const _Debuge = false;
@@ -28,13 +17,10 @@ export default class w_AZS_SF_new extends React.Component {
 
     componentDidMount() {
         this.tick_book(this.props.DVC);
-        //this.setState({ DVC: this.props.DVC });//, this.tick_book(this.state.DVC));
-
     }
     componentDidUpdate(prevProps) {
         if (this.props.DVC != prevProps.DVC) {
             this.tick_book(this.props.DVC);
-            //this.setState({ DVC: this.props.DVC });//, this.tick_book(this.state.DVC));
         }
     }
 

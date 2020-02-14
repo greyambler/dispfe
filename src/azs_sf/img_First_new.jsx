@@ -5,9 +5,11 @@ import { Stage, Layer, Rect, Text, Circle, Shape, Image } from 'react-konva';
 import { get_Num, createGuid, get_Json_String } from '../core/core_Function.jsx'
 
 
-import AZS_Image from '../controls/AZS_Image.jsx'
+import Data_Property_PL from "./PL/Data_Property_PL.jsx";
+import Data_Property_TRK from "./TRK/Data_Property_TRK.jsx";
+import Data_Property_TSO from "./TSO/Data_Property_TSO.jsx";
 
-import W_prop_value from './prop_value_new.jsx'
+import AZS_Image from '../controls/AZS_Image.jsx'
 
 const _Debuge = false;
 
@@ -118,8 +120,17 @@ export default class img_First_new extends React.Component {
  */}                        </tbody>
                     </table>
                 }
+                {OBJ.main_type == "pl" &&
+                    <Data_Property_PL list_book={this.props.list_book} is_First_Coll={true} />
+                }
+                {OBJ.main_type == "pump" &&
+                    <Data_Property_TRK list_book={this.props.list_book} is_First_Coll={true}/>
+                }
+                {OBJ.main_type == "tso" &&
+                    <Data_Property_TSO list_book={this.props.list_book} is_First_Coll={true}/>
+                }
 
-                {this.state.is_View && this.state.list_book != null &&
+                {/*this.state.is_View && this.state.list_book != null &&
                     <table width="99%">
                         <tbody>
                             {
@@ -137,7 +148,7 @@ export default class img_First_new extends React.Component {
 
                         </tbody>
                     </table>
-                }
+                */}
 
             </center>
         );

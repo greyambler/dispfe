@@ -1,8 +1,5 @@
 import React from 'react';
-
-import { get_Num } from '../../core/core_Function.jsx'
-import { Stage, Layer, Rect, Text, Circle, Shape, Image } from 'react-konva';
-
+import { Stage, Layer } from 'react-konva';
 import AZS_Image from '../../controls/AZS_Image.jsx'
 
 export default class trk_First extends React.Component {

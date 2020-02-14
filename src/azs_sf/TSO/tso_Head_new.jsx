@@ -2,17 +2,19 @@ import React from 'react';
 
 import { get_Num, getColor_Crit, POST, WS, get_Json_String, Data_Read, createGuid } from '../../core/core_Function.jsx'
 import { Stage, Layer, Rect, Text, Line, Circle, Shape } from 'react-konva';
-import Konva from "konva";
+//import Konva from "konva";
 
 import AZS_Image from '../../controls/AZS_Image.jsx'
 //import { Button, Icon } from 'semantic-ui-react';
 
-import W_prop_value from '../prop_value_new.jsx'
-import W_tso_camera from '../TSO/tso_camera.jsx'
+import Data_Property_TSO from "./Data_Property_TSO.jsx";
 
-import W_tso_Table_Props_new from '../TSO/tso_Table_Props_new.jsx'
+//import W_prop_value from '../prop_value_new.jsx'
+//import W_tso_camera from '../TSO/tso_camera.jsx'
 
-const _Is_Run_WS = true;
+//import W_tso_Table_Props_new from '../TSO/tso_Table_Props_new.jsx'
+
+const _Is_Run_WS = false;
 const _Debug_Is_Run_WS = false;
 const _Debuge_Message = false;
 const _Debuge = false;
@@ -211,9 +213,6 @@ export default class tso_Head_new extends React.Component {
             }
         }
     }
-
-
-
 
     /***Команды*********************** */
 
@@ -471,8 +470,9 @@ export default class tso_Head_new extends React.Component {
                     </table>
                 }
 
+                <Data_Property_TSO list_book={this.state.list_data} />
 
-                {this.state.is_View && this.state.list_data != null &&
+                {/*this.state.is_View && this.state.list_data != null &&
                     <table width="99%">
                         <tbody>
                             {
@@ -489,7 +489,7 @@ export default class tso_Head_new extends React.Component {
 
                         </tbody>
                     </table>
-                }
+                */}
             </center>
         );
     }

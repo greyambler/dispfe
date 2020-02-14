@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stage, Layer, Rect, Text, Circle, Shape, Image } from 'react-konva';
+import { Stage, Layer } from 'react-konva';
 
 import AZS_Image from '../../controls/AZS_Image.jsx'
 

@@ -1,20 +1,11 @@
 import React from 'react';
-
-import {
-    get_Num, getColor_Crit, POST, WS, get_Json_String, Data_Read,
-    createGuid, Get_PROPS_Single, IS_PL_View,
-} from '../../core/core_Function.jsx'
-
-import { Stage, Layer, Rect, Text, Line, Circle, Shape, Image } from 'react-konva';
-import Konva from "konva";
+import { POST, WS, get_Json_String } from '../../core/core_Function.jsx'
+import { Stage, Layer, Rect, Text } from 'react-konva';
 
 import AZS_Image from '../../controls/AZS_Image.jsx'
+import Data_Property_PL from "./Data_Property_PL.jsx";
 
-import W_prop_value from '../prop_value_new.jsx'
-
-//import W_prop_value_old from '../prop_value.jsx'
-
-const _Is_Run_WS = true;
+const _Is_Run_WS = false;
 const _Debug_Is_Run_WS = false;
 const _Debuge_Message = true;
 const _Debuge = false;
@@ -97,12 +88,11 @@ export default class pl_Head_new extends React.Component {
         this.SET_PROPS_PL = this.SET_PROPS_PL.bind(this);
         this.SET_VALUE_ODJ = this.SET_VALUE_ODJ.bind(this);
 
-        /******** WS******************** */
+        // WS
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        //this.is_Choose = this.is_Choose.bind(this);
-        /******** WS******************** */
+        //  WS
 
         this.state = {
 
@@ -118,13 +108,13 @@ export default class pl_Head_new extends React.Component {
 
             message: "",
 
-            /******** WS******************** */
+            //  WS
             Ws: WS,
             connection: null,
             messages: [],
             IsOpen: false,
             visible: this.props.visible,
-            /******** WS******************** */
+            //  WS
         }
     }
     componentDidMount() {
@@ -225,7 +215,7 @@ export default class pl_Head_new extends React.Component {
     }
 
 
-    /***Команды*********************** */
+    // Команды
     async toock(el) {///Отправка команды
 
         let rss = POST;
@@ -287,9 +277,9 @@ export default class pl_Head_new extends React.Component {
     show_Message(text) {
         this.setState({ message: text });
     }
-    /***Команды*********************** */
+    // Команды
 
-    /******** WS******************** */
+    // WS
     /*   is_Choose(visible) {
           if (visible) {
               if (_Debug_Is_Run_WS) {
@@ -312,9 +302,9 @@ export default class pl_Head_new extends React.Component {
                       }
                       await this.state.connection.close(1000, "Hello Web Sockets!");
                       this.setState({ IsOpen: false, connection: null, data: null });
-  
+     
                       await setInterval(() => this.start_ws(), 10000);
-  
+     
                   }
               }
           } catch (e) {
@@ -396,7 +386,7 @@ export default class pl_Head_new extends React.Component {
             });
         }
     }
-    /******** WS******************** */
+    // WS
 
     render() {
         let S_width = 120;
@@ -425,7 +415,7 @@ export default class pl_Head_new extends React.Component {
             fontSize: "9px",
         }
 
-        let rrr = global.IS_PL_View;
+        //let rrr = global.IS_PL_View;
 
         return (
             <center title={this.state.message}>
@@ -467,51 +457,20 @@ export default class pl_Head_new extends React.Component {
                             <tr>
                                 <td style={style_td_D}>{"self_ID - " + this.state.self_ID}</td>
                             </tr>
-                            {/* <tr>
-                                <td style={style_td_D}>{"key - " + this.state.OBJ.key}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"key_value - " + this.state.OBJ.key_value}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"main_type - " + this.state.OBJ.main_type}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"type - " + this.state.OBJ.type}</td>
-                            </tr> */}
+
                             <tr>
                                 <td style={style_td_D}>{"crit - " + this.state.OBJ.crit}</td>
                             </tr>
                             <tr>
                                 <td style={style_td_D}>{"dvc_id - " + this.state.OBJ.dvc_id}</td>
                             </tr>
-                            {/* <tr>
-                                <td style={style_td_D}>{"dvc_id_m - " + get_Json_String(this.state.OBJ.dvc_id_m)}</td>
-                            </tr> */}
-                        </tbody>
-                    </table>
-                }
-
-                {this.state.is_View && this.state.list_data != null &&
-                    //global.IS_PL_View &&
-                    <table width="99%"  >
-                        <tbody>
-
-                            {
-                                this.state.list_data.map(item => {
-                                    return (
-                                        <tr key={createGuid()}>
-                                            <td key={createGuid()} style={style_td}>
-                                                <W_prop_value item={item} />
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
 
                         </tbody>
                     </table>
                 }
+
+                <Data_Property_PL list_book={this.state.list_data} />
+
             </center>
         );
     }

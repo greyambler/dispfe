@@ -1,8 +1,5 @@
 import React from 'react';
-
-import W_azs from './w_azs.jsx'
-
-import { RSS_AZS, RES, Get_Main_PROPS_AZS_Single, demoAsyncCall } from '../core/core_Function.jsx'
+import { RSS_AZS, Get_Main_PROPS_AZS_Single, demoAsyncCall } from '../core/core_Function.jsx'
 
 import W_table_azs from './w_table_azs_new.jsx'
 
@@ -18,20 +15,19 @@ export default class w_main_azs_new extends React.Component {
         this.get_Id_Devices = this.get_Id_Devices.bind(this);
         this.state = {
             loading: true,//окно ожидания
-
             list_dvc_azs: null,
         }
     }
-    /***Modal_Alert *///окно ожидания
+    // Modal_Alert ///окно ожидания
     componentWillUnmount() { }
-    /***Modal_Alert *///окно ожидания
+    // Modal_Alert ///окно ожидания
     View_Modal_Err(stt) {//окно ожидания
         this.setState({ openModal_Err: stt });
     }
     View_Modal_Ok(stt) {//окно ожидания
         this.setState({ openModal_Ok: stt });
     }
-    /***Modal_Alert *///окно ожидания
+    // Modal_Alert ///окно ожидания
 
     componentDidMount() {
         demoAsyncCall().then(() => this.setState({ loading: false }));//окно ожидания
@@ -91,7 +87,7 @@ export default class w_main_azs_new extends React.Component {
         let _Height = window.innerHeight;
 
         {
-            /***** Ждать *****************/
+            // Ждать
             const { loading } = this.state;
             let div_Null_Data = {
                 minWidth: _Width - 40,
@@ -109,10 +105,11 @@ export default class w_main_azs_new extends React.Component {
                     </div>
                 );
             }
-            /***** Ждать *****************/
+            // Ждать
         }
 
         if (this.state.list_dvc_azs != null) {
+
             return (
                 <W_table_azs
                     history={this.props.history}
@@ -122,10 +119,10 @@ export default class w_main_azs_new extends React.Component {
 
                     visible={this.props.visible}
 
-                    
                     list_type_dvc={this.props.list_type_dvc}
                 />
             );
+
         } else {
 
             let div_Null = {
@@ -133,6 +130,7 @@ export default class w_main_azs_new extends React.Component {
                 minWidth: _Width - 40,
                 minHeight: _Height - 70,
             }
+
             return (
                 <div style={div_Null}>
                     <center><h4>{this.props.header}</h4></center>

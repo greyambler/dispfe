@@ -17,6 +17,7 @@
     "react-scroll": "^1.7.14",
     "react-table": "^6.10.3",
     "semantic-ui-react": "^0.88.1",
+    "use-global-hook": "^0.1.12",
     "ws": "^7.2.1"
   },
   "scripts": {

@@ -1091,8 +1091,11 @@ export function Data_Read(data, dvc, azs) {
 
 export function Init_DVC() {
     let DVC = new Array();
+
     DVC.push({ nm: "Резервуар", typ: "pl", check: true, id: createGuid(), img: "./images/pl.png" });
+
     DVC.push({ nm: "ТРК", typ: "pump", check: true, id: createGuid(), img: "./images/TRK.png" });
+
     DVC.push({ nm: "ТСО", typ: "tso", check: true, id: createGuid(), img: "./images/TSO.png" });
 
     //DVC.push({ nm: "CAM", typ: "cam", check: true, id: createGuid() });
