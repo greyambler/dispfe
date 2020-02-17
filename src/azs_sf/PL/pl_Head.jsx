@@ -102,7 +102,7 @@ export default class pl_Head extends React.Component {
         }
     }
 
-    // Команды
+    /***Команды*********************** */
     async toock(el) {///Отправка команды
 
         let rss = POST;
@@ -166,7 +166,7 @@ export default class pl_Head extends React.Component {
     show_Message(text) {
         this.setState({ message: text });
     }
-    // Команды
+    /***Команды*********************** */
 
 
     render() {

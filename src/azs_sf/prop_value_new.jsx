@@ -111,8 +111,10 @@ export default class prop_value_new extends React.Component {
                 let style_td = {
                     background: _bgcolor,
                     whiteSpace: "nowrap",
-                }
+                    marginRight: "1px",
+                    marginLeft: "1px",
 
+                }
                 let col = (this.state.coll_let == null) ? 11 : this.state.coll_let;
 
                 let VAL = (_Text.length < col && !this.state.is_All_Text)

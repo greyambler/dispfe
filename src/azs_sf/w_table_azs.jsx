@@ -162,9 +162,9 @@ export default class w_table_azs extends React.Component {
                                                                 return (
                                                                     <td key={createGuid()} colSpan={el_azs.ColSpan} style={style_th}>
                                                                         <Single_Coll
+                                                                            key={el_azs.ID}
                                                                             el={el_azs}
                                                                             el_azsS={el_azsS}
-                                                                            
                                                                         />
                                                                     </td>
                                                                 );
@@ -196,11 +196,11 @@ export default class w_table_azs extends React.Component {
                                                                 return (
                                                                     <td key={createGuid()} colSpan={el_azs.ColSpan} style={style_th}>
                                                                         <Single_Coll
+                                                                            key={el_azs.ID}
                                                                             el={el_azs}
                                                                             UP={this.get_Up(el)}
                                                                             list_fuels={this.state.list_fuels}
                                                                             history={this.state.history}
-                                                                            
                                                                         />
                                                                     </td>
                                                                 );

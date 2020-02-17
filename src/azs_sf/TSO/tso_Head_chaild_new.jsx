@@ -1,26 +1,11 @@
 import React from 'react';
-
-import { get_Num, getColor_Crit, POST, WS, get_Json_String, Data_Read, createGuid } from '../../core/core_Function.jsx'
-import { Stage, Layer, Rect, Text, Line, Circle, Shape } from 'react-konva';
-import Konva from "konva";
-
-import AZS_Image from '../../controls/AZS_Image.jsx'
-//import { Button, Icon } from 'semantic-ui-react';
+import { POST, WS, get_Json_String } from '../../core/core_Function.jsx'
 
 import Data_Property_TSO from "./Data_Property_TSO.jsx";
 
-import W_prop_value from '../prop_value_new.jsx'
-import W_tso_camera from '../TSO/tso_camera.jsx'
-
-import W_tso_Table_Props_new from '../TSO/tso_Table_Props_new.jsx'
-
-
-const _Is_Run_WS = false;
+const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
-
-
 const _Debuge_Message = false;
-
 const _Debuge = false;
 
 function get_lock(state_shift) {
@@ -79,35 +64,31 @@ export default class tso_Head_chaild_new extends React.Component {
         this.SET_PROPS_PL = this.SET_PROPS_PL.bind(this);
         this.SET_VALUE_ODJ = this.SET_VALUE_ODJ.bind(this);
 
-        /******** WS******************** */
+        //  WS
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        //this.is_Choose = this.is_Choose.bind(this);
-        /******** WS******************** */
+        this.restart = this.restart.bind(this);
+        //  WS
 
         this.state = {
-
             OBJ: this.props.OBJ,
+            _Fuels: this.props._Fuels,
+            list_data: this.props.list_data,
+            azs: this.props.azs,
+
             self_ID: this.props.OBJ.dvc_id,
             dvc_text: this.props.OBJ.key_value,
             status_text: "",
-
-            is_View: this.props.is_View,
-
-            _Fuels: this.props._Fuels,
-            list_data: this.props.list_data,
-
             message: "",
 
-            /******** WS******************** */
+            //  WS
             Ws: WS,
             connection: null,
             messages: [],
             IsOpen: false,
             visible: this.props.visible,
-            azs: this.props.azs,
-            /******** WS******************** */
+            //  WS
         }
     }
     componentDidMount() {
@@ -214,16 +195,14 @@ export default class tso_Head_chaild_new extends React.Component {
         }
     }
 
-    /***Команды*********************** */
+    // Команды
 
-    /*
-    •	shift_open - открыть смену
-    •	shift_close - закрыть смену
-    •	shift_stop - остановить смену
-    •	shift_start - запустить смену
-    •	print_z_report - закрыть фискальную смену (с закрытием смены на ТУ 3в1)
-    •	print_fin_report - печать финансового отчета
-    */
+    //•	shift_open - открыть смену
+    //•	shift_close - закрыть смену
+    //•	shift_stop - остановить смену
+    //•	shift_start - запустить смену
+    //•	print_z_report - закрыть фискальную смену (с закрытием смены на ТУ 3в1)
+    //•	print_fin_report - печать финансового отчета
 
     async toock_shift_stop(el) {///Отправка команды // 'остановить/запустить смену'
         let rss = POST;
@@ -298,11 +277,24 @@ export default class tso_Head_chaild_new extends React.Component {
     show_Message(text) {
         this.setState({ message: text });
     }
+    // Команды
 
-    /***Команды*********************** */
+    // WS
+    restart() {
+        //alert("start_ws tso_Head_chaild_new");
+        if (_Is_Run_WS) {
+            if (this.state.connection != null && this.state.IsOpen) {
+                this.state.connection.close(1000, "Hello Web Sockets!");
+                this.setState({ IsOpen: false, connection: null, data: null });
+                /************************ */
+                //timerId = setInterval(() => this.start_ws(), 10000);
 
-    /******** WS******************** */
-    
+                setTimeout(() => this.start_ws(), 1000);// 60000- 1мин
+
+                /************************ */
+            }
+        }
+    }
     start_ws(e) {
         if (_Is_Run_WS) {
             if (this.state.self_ID != null && !this.state.visible) {
@@ -326,8 +318,8 @@ export default class tso_Head_chaild_new extends React.Component {
                                     let r = 0;
                                 }
                             } catch (error) {
-                                console.log('******WS******************' + error);
-                                console.log('******WS******************' + evt.data);
+                                console.log('*WS*' + error);
+                                console.log('*WS*' + evt.data);
                             }
                         }
                     }
@@ -375,12 +367,10 @@ export default class tso_Head_chaild_new extends React.Component {
             });
         }
     }
-    /******** WS******************** */
+
+    // WS
 
     render() {
-        let S_width = 120;
-        let S_height = 184;
-
         let _style_tbl = {
             background: 'white',
             height: '50px',
@@ -391,20 +381,6 @@ export default class tso_Head_chaild_new extends React.Component {
             border: '1px solid #F0F0F0',
         }
 
-        let style_td = {
-            background: 'white',
-            minWidth: '20px',
-            width: '120px',
-            textAlign: 'center',
-            bgcolor: "black",
-            border: '1px solid #F0F0F0',
-            verticalAlign: 'middle',
-            fontSize: "14px",
-            height: "25px",
-            align: "center",
-
-            whiteSpace: "nowrap",
-        }
         let style_td_D = {
             background: 'white',
             textAlign: 'left',
@@ -417,11 +393,9 @@ export default class tso_Head_chaild_new extends React.Component {
             //whiteSpace: "nowrap",
         }
 
-        //let VAL = (this.state.dvc_text.length < 14) ? this.state.dvc_text : this.state.dvc_text.substring(0, 14);
-
         return (
             <center title={this.state.message}>
-                <div style={_style_tbl} title={this.state.dvc_text} >{this.state.dvc_text}</div>
+                <div style={_style_tbl} title={this.state.dvc_text} onDoubleClick={this.restart}>{this.state.dvc_text}</div>
 
                 {_Debuge &&
                     <table>
@@ -432,51 +406,20 @@ export default class tso_Head_chaild_new extends React.Component {
                             <tr>
                                 <td style={style_td_D}>{"self_ID - " + this.state.self_ID}</td>
                             </tr>
-                            {/* <tr>
-                                <td style={style_td_D}>{"key - " + this.state.OBJ.key}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"key_value - " + this.state.OBJ.key_value}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"main_type - " + this.state.OBJ.main_type}</td>
-                            </tr>
-                            <tr>
-                                <td style={style_td_D}>{"type - " + this.state.OBJ.type}</td>
-                            </tr>*/}
+
                             <tr>
                                 <td style={style_td_D}>{"crit - " + this.state.OBJ.crit}</td>
                             </tr>
                             <tr>
                                 <td style={style_td_D}>{"dvc_id - " + this.state.OBJ.dvc_id}</td>
                             </tr>
-                            {/*                             <tr>
-                                <td style={style_td_D}>{"dvc_id_m - " + get_Json_String(this.state.OBJ.dvc_id_m)}</td>
-                            </tr>
- */}                        </tbody>
+
+                        </tbody>
                     </table>
                 }
 
                 <Data_Property_TSO list_book={this.state.list_data} />
 
-                {/* this.state.is_View && this.state.list_data != null &&
-                    <table width="99%">
-                        <tbody>
-                            {
-                                this.state.list_data.map(item => {
-                                    return (
-                                        <tr key={createGuid()}>
-                                            <td key={createGuid()} style={style_td}>
-                                                <W_prop_value item={item} />
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
-
-                        </tbody>
-                    </table>
-                */ }
             </center>
         );
     }

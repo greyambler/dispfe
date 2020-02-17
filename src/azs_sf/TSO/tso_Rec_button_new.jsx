@@ -1,14 +1,8 @@
 import React from 'react';
-
-import { get_Num, getColor_Crit, POST } from '../../core/core_Function.jsx'
-import { Stage, Layer, Rect, Text, Line, Circle, Shape } from 'react-konva';
-import Konva from "konva";
-
-import AZS_Image from '../../controls/AZS_Image.jsx'
+import { POST } from '../../core/core_Function.jsx'
 
 const _Debuge = false;
 const _Debuge_Message = true;
-
 
 function get_cmd_mfc_ID(TCO) {
     let ID = null;
@@ -65,8 +59,6 @@ function get_Json_TEST(id) {
 
 }
 
-
-
 export default class tso_Rec_button_new extends React.Component {
     constructor(props) {
         super(props);
@@ -84,7 +76,6 @@ export default class tso_Rec_button_new extends React.Component {
             case 'restart_pc': _body = get_restart(id, "restart_pc"); break;
             case 'restart_fr': _body = get_restart(id, "restart_fr"); break;
             case 'restart_cash': _body = get_restart(id, "restart_cash"); break;
-
             case 'shift_stop': {
                 let _code = Number(tco[tco.length - 1].STATE_SHIFT.code);
                 if (!isNaN(_code)) {
@@ -104,14 +95,12 @@ export default class tso_Rec_button_new extends React.Component {
             }
                 break;
 
-            /*
-            •	shift_open - открыть смену
-            •	shift_close - закрыть смену
-            •	shift_stop - остановить смену
-            •	shift_start - запустить смену
-            •	print_z_report - закрыть фискальную смену (с закрытием смены на ТУ 3в1)
-            •	print_fin_report - печать финансового отчета
-            */
+            //•	shift_open - открыть смену
+            //•	shift_close - закрыть смену
+            //•	shift_stop - остановить смену
+            //•	shift_start - запустить смену
+            //•	print_z_report - закрыть фискальную смену (с закрытием смены на ТУ 3в1)
+            //•	print_fin_report - печать финансового отчета
 
             default: _body = get_Json_TEST(id); break;
         }
@@ -160,7 +149,6 @@ export default class tso_Rec_button_new extends React.Component {
     render() {
         return (
             <>
-                {/*this.props.text*/}
                 {this.props.IsButton &&
                     <table id="s_table">
                         <tbody>

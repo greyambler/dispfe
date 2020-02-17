@@ -3,23 +3,15 @@ import { Image } from 'semantic-ui-react'
 import useGlobal from "../../core/useGlobal.jsx";
 
 function Filter_Check() {
-    
     const [globalState, globalActions] = useGlobal();
-
     const { showdata_pl } = globalState.counters;
-
     const _check = el => {
         globalActions.showdata_pl.Showdata_PL(!showdata_pl);
     };
-
     if (showdata_pl) {
-        return (
-            <Image src="images/arrow_Up.png" onClick={_check} />
-        );
+        return (<Image src="images/arrow_Up.png" onClick={_check} />);
     } else {
-        return (
-            <Image src="images/arrow_Down.png" onClick={_check} />
-        );
+        return (<Image src="images/arrow_Down.png" onClick={_check} />);
     }
 };
 
@@ -28,8 +20,6 @@ export default class Filter_Check_PL extends React.Component {
         super(props);
         this.state = {
             text_dvc: this.props.text_dvc,
-            _up: this.props.UP,
-            _arrow: this.props.UP ? "images/arrow_Up.png" : "images/arrow_Down.png",
             type: this.props.type,
         }
     }

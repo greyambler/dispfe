@@ -1,5 +1,12 @@
 import React from 'react';
-import { get_Json_String} from '../core/core_Function.jsx'
+
+import { get_Num, getColor_Crit, POST, get_Curent_Login , get_Json_String} from '../core/core_Function.jsx'
+
+import { Stage, Layer, Rect, Text, Line, Circle, Shape, Image } from 'react-konva';
+
+import Konva from "konva";
+
+import AZS_Image from '../controls/AZS_Image.jsx'
 
 const _Debuge = false;
 
@@ -9,14 +16,18 @@ export default class azs_Head extends React.Component {
         this.state = {
         }
     }
+
+
     AZS_ERROR_Onclick(id_azs) {
         //alert("Тест = " + id_azs);
         //history={this.props.history}
         this.props.history.push('/azs_listerror&' + id_azs);
     }
+
     render() {
         let S_width = 120;
         let S_height = 200;
+
         let Head_Staly = {
             fontFamily: 'Neusa Next Pro',
             fontSize: '19px',
@@ -29,6 +40,7 @@ export default class azs_Head extends React.Component {
 
             whiteSpace: "nowrap",
         }
+
         let OBJ = this.props.OBJ;
         let style_td_D = {
             background: 'white',

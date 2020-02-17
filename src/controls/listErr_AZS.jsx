@@ -110,7 +110,7 @@ export default class listErr_AZS extends React.Component {
                 <div align="center">
                     <center><h1>Запрос данных.</h1></center>
                     <img src='images/anim_engine.gif' style={stayle_1} />
-                    <hr width={this.props.w_Width - 40} />
+                    <hr width={this.state.w_Width - 40} />
                 </div>
             );
         }

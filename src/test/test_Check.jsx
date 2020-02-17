@@ -1,50 +1,5 @@
 import React from 'react';
-import {
-  demoAsyncCall, saveToken, RSS_AZS_EDIT, set_Curent_Login,
-  get_Curent_Login, refreshPage, createGuid
-} from '../core/core_Function.jsx'
-
-/*
-import CheckboxTree from 'react-checkbox-tree';
-
- import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import 'font-awesome/css/font-awesome.min.css';
-
-
-const nodes = [{
-  value: 'mars',
-  label: 'Mars',
-  children: [
-    { value: 'phobos', label: 'Phobos' },
-    { value: 'deimos', label: 'Deimos' },
-  ],
-}];
-
-export default class test_Check extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checked: [],
-      expanded: [],
-
-      seach_Text: "",
-    };
-  }
-
-  render() {
-    const { isLoading, value, results } = this.state;
-
-    return (
-      <CheckboxTree nodes={nodes} checked={this.state.checked}
-        expanded={this.state.expanded} onCheck={checked => this.setState({ checked })}
-        onExpand={expanded => this.setState({ expanded })}
-      />
-
-
-    );
-  }
-}
- */
+import { demoAsyncCall } from '../core/core_Function.jsx'
 
 
 export default class test_Check extends React.Component {
@@ -73,9 +28,9 @@ export default class test_Check extends React.Component {
     let div_Null_Data = {
       minHeight: this.state.w_Height - 70,
       minWidth: this.state.w_Width - 50,
-}
+    }
 
-    /***** Ждать *****************/
+    // Ждать
     const { loading } = this.state;
     if (loading) {
       let stayle_1 = {

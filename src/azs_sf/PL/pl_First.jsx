@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { Stage, Layer } from 'react-konva';
-
 import AZS_Image from '../../controls/AZS_Image.jsx'
 
 export default class pl_First extends React.Component {

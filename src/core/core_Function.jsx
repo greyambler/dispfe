@@ -6,6 +6,8 @@ export const _IS_NEW = true;  // true  false
 const IP_Server = (_Release)
     ? "http://" + window.location.host
     : "http://172.23.16.18:8080";
+
+//http://172.23.16.18:8080/dprest-1.0-SNAPSHOT/webresources/ru.expertek.dp.dpfacade.dic
 //const IP_Server = "http://" + window.location.host;
 
 export const RSS_List_Main = IP_Server + "/dprest-1.0-SNAPSHOT/webresources/ru.expertek.dp.dpfacade.dic"
@@ -16,6 +18,7 @@ export const RSS_AZS_EDIT = IP_Server + "/dprest-1.0-SNAPSHOT/webresources/ru.ex
 export const WS = (_Release)
     ? "ws://" + window.location.host + "/dpsock-1.0-SNAPSHOT/alwsc"
     : "ws://172.23.16.18:8080/dpsock-1.0-SNAPSHOT/alwsc";
+
 //export const WS = "ws://" + window.location.host + "/dpsock-1.0-SNAPSHOT/alwsc";
 
 export const POST = IP_Server + "/dprest-1.0-SNAPSHOT/webresources/ru.expertek.dp.dpfacade.com";
@@ -23,6 +26,10 @@ export const AZS_List_Error = IP_Server + "/dpmark-1.0-SNAPSHOT/webresources/ru.
 
 
 export let Curent_Login = "";
+
+
+//global.MY_Var = true;
+//window.IS_PL_View = true;
 
 /** справочник */
 function Get_MainHead_OP(op) {
@@ -151,7 +158,6 @@ export function Get_Main_PROPS(List_Main, DVC) {
 
 /***********Начальная колонка ******************** */
 
-/**/
 export function Get_PROPS_Single(List_Main, TYPE, val_0) {
     let BOOK_All = new Array();
     if (List_Main != null) {
@@ -205,11 +211,6 @@ function Get_dvctyptree_Single(item_pros, item) {
             if (type != "pump") {
                 for (const key in _item) {
                     if (key == "nm") {// || key == "id" || key == "typ") {
-
-                        //if (_item[key] == "Купюроприёмник") {
-                        //    let r = 0;
-                        // }
-
                         item_pros.push({
                             ID: 0,
                             isMain: true, main_type: type, type: _item.typ,
@@ -217,7 +218,6 @@ function Get_dvctyptree_Single(item_pros, item) {
                         });
                     }
                 }
-                //Get_CNTYP_Single(item_pros, _item, true);
             }
         }
     }
@@ -236,7 +236,7 @@ function set_AZS_name_Single(BOOK_All) {
         key: "NULL", key_value: " ", isDVC: false,
         crit: " ", dvc_id: "NULL", dvc_id_m: "NULL"
     });
-    BOOK_All.push({
+    /* BOOK_All.push({
         ID: 0,
         ColSpan: 2,
         isMain: true, main_type: 'azs', type: 'azs',
@@ -249,7 +249,7 @@ function set_AZS_name_Single(BOOK_All) {
         isMain: true, main_type: 'azs', type: 'azs',
         key: "typ", key_value: "ob", isDVC: false,
         crit: " ", dvc_id: "NULL", dvc_id_m: "NULL"
-    });
+    }); */
     BOOK_All.push({
         ID: 0,
         ColSpan: 2,
@@ -261,14 +261,14 @@ function set_AZS_name_Single(BOOK_All) {
 function SET_MainHead_Single(item, item_pros) {
     let type = item.typ;
     for (const key in item) {
-        if (key == "nm" || key == "id" || key == "typ") {
-            if (key == "id") {
+        if (key == "nm") {// || key == "id" || key == "typ") {
+            /* if (key == "id") {
                 item_pros.push({
                     ID: 0,
                     isMain: true, main_type: 'NULL', type: 'NULL',
                     key: 'NULL', key_value: "_", isDVC: false, crit: " ",
                 });
-            }
+            } */
             item_pros.push({
                 ID: 0,
                 isMain: true, main_type: type, type: type,
@@ -276,9 +276,7 @@ function SET_MainHead_Single(item, item_pros) {
             });
         }
     }
-    /* 
-    Get_MainHead_CNTYP(item_pros, item, false);
-    */
+
     Get_dvctyptree_Single(item_pros, item);
 
     return item_pros;
@@ -362,15 +360,6 @@ export function Get_Main_PROPS_AZS_Single(azs, mass_DVC, List_Main) {
         let list_PL_col = get_Lists(List_Main, "pl");
         let list_PUMP_col = get_Lists(List_Main, "pump");
         let list_TSO_col = get_Lists(List_Main, "tso");
-
-        /* let list_FR_col = get_Lists(List_Main, "fr");
-
-
-               let list_CASH_col = get_Lists(List_Main, "cash");
-                let list_TD_col = get_Lists(List_Main, "td");
-                let list_MSC_col = get_Lists(List_Main, "msc");
-                let list_CMD_MFC_col = get_Lists(List_Main, "cmd_mfc");
-         */
 
         let mass_d_tree = new Array();
 
@@ -778,7 +767,7 @@ export function get_Curent_Login() {
     }
 }
 export function demoAsyncCall() {
-    return new Promise((resolve) => setTimeout(() => resolve(), 1500));
+    return new Promise((resolve) => setTimeout(() => resolve(), 1000));
 }
 export function Get_MainHead_save(item) {
     let item_pros = new Array();
@@ -998,106 +987,12 @@ export function get_Line_TSO(_Item) {
     }
 }
 
-
-/*
- 
-function get_Fuel_Code(data, data_val, azs) {
-    let _fuel = 0;
-    let mass_DVC_AZS = null;
-    for (const dvc of azs) {
-        if (data.id == dvc.dvc_id) {
-            for (const _dvc of azs) {
-                if (_dvc.ID == dvc.ID && _dvc.key == "id" && _dvc.mass_DVC != null) {
-                    mass_DVC_AZS = _dvc.mass_DVC;
-                    break;
-                }
-            }
-        }
-        if (data.id == dvc.dvc_id && dvc.key == data_val.typ && dvc.key == "nozzle" && mass_DVC_AZS != null) {
-            for (const dev_A of mass_DVC_AZS) {
-                if (dev_A.typ == data_val.typ) {
-                    if (dev_A.prop != undefined) {
-                        for (const item_prop of dev_A.prop) {
-                            if (item_prop.typ == 'NUM') {
-                                if (parseInt(item_prop.capacity) == parseInt(data_val.val)) {
-                                    _fuel = dev_A.fuel;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return _fuel;
-}
- 
-export function Data_Read(data, dvc, azs) {
-    //let dvc = this.state.EL;
-    let DATA = JSON.parse(data);
-    for (const data_val of DATA.values) {
-        if (DATA.id == dvc.dvc_id) {
-            switch (data_val.typ) {
-                case "STATE_PL": dvc.state_pl = data_val.val; break;
-                case "WATER_LEVEL": dvc.water_level = data_val.val; break;
-                case "STATE_SHIFT": dvc.state_shift = data_val.val; break;
-                case "STATUS_TRK":
-                    {
-                        dvc.state_trk = data_val.val;
-                        break;
-                    }
-                case "nozzle":
-                    {
-                        if (data_val.val != 0) {
-                            let _fuel = get_Fuel_Code(DATA, data_val, azs);
-                            dvc.fuel = _fuel;
-                        } else {
-                            dvc.fuel = 0;
-                        }
-                        break;
-                    }case "TOTAL_OBSERVED_VOLUME": dvc.TOTAL_OBSERVED_VOLUME = data_val.val.toFixed(2); break;
-                case "AVERAGE_TEMP": dvc.AVERAGE_TEMP = data_val.val.toFixed(2); break;
-                case "TP_STATUS": dvc.TP_STATUS = data_val.val; break;
-                case "cn08": dvc.cn08 = data_val.val; break;
-                case "OBSERVED_DENSITY": dvc.OBSERVED_DENSITY = data_val.val; break;
-                case "TOTAL_GROSS_STANDARD_VOLUME": dvc.TOTAL_GROSS_STANDARD_VOLUME = data_val.val; break;
- 
-                case "PRODUCT_LEVEL": dvc.PRODUCT_LEVEL = data_val.val.toFixed(2); break;
-                case "WATER_VOLUME": dvc.WATER_VOLUME = data_val.val.toFixed(2); break;
- 
- 
- 
- 
-            }
- 
-             for (const _key in dvc) {
-                //if (dvc.key == data_val.typ) {
-                if (_key.toLowerCase() == data_val.typ.toLowerCase()) {
-                    if (data_val.comment != null) {
-                        dvc[_key] = data_val.comment;
-                    } else {
-                        dvc[_key] = data_val.val.toFixed(2);
-                    }
-                    dvc.crit = data_val.crit;
-                    break;
-                }
-            }
-        }
-    }
-    return dvc;
-}
-*/
-
 export function Init_DVC() {
     let DVC = new Array();
-
     DVC.push({ nm: "Резервуар", typ: "pl", check: true, id: createGuid(), img: "./images/pl.png" });
-
     DVC.push({ nm: "ТРК", typ: "pump", check: true, id: createGuid(), img: "./images/TRK.png" });
-
     DVC.push({ nm: "ТСО", typ: "tso", check: true, id: createGuid(), img: "./images/TSO.png" });
 
-    //DVC.push({ nm: "CAM", typ: "cam", check: true, id: createGuid() });
+    /*DVC.push({ nm: "CAM", typ: "cam", check: true, id: createGuid() });*/
     return DVC;
 }

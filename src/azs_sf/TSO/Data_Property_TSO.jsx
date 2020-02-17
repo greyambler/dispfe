@@ -22,16 +22,18 @@ const Data_Property_TSO = (_Object) => {
         }
         let style_td1 = {
             background: 'white',
-            minWidth: '20px',
-            width: '120px',
+
             textAlign: 'center',
             bgcolor: "black",
-            border: '1px solid #F0F0F0',
-            verticalAlign: 'center',
-            fontSize: "11px",
-            height: "25px",
+            height: "26px",
             align: "center",
             whiteSpace: "nowrap",
+
+            WebkitBorderRadradius: "6px",
+            MozBorderRadius: "6px",
+            borderRadius: "6px",
+            transition: "0.2s",
+            border: "1px solid #A5ABB3",
         }
         let style_td = (_Object.is_First_Coll) ? style_td0 : style_td1;
 
@@ -43,7 +45,7 @@ const Data_Property_TSO = (_Object) => {
                             return (
                                 <tr key={createGuid()}>
                                     <td key={createGuid()} style={style_td}>
-                                        <W_prop_value item={item} coll_let={20} />
+                                        <W_prop_value item={item} coll_let={_Object.is_First_Coll ? 20 : 11} />
                                     </td>
                                 </tr>
                             );

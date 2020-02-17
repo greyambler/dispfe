@@ -121,16 +121,12 @@ export default class single_coll extends React.Component {
             else if (this.state.el.ID != 0 && this.state.el.type == "msc" && this.state.el.key == "nm" && text != "") {
                 //шапка МФК 
                 //return (<center><W_tso_Rec_button text={text} title="Перезагрузка ПК" type_Body='restart_pc' el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels} /></center>);
-
-
                 if (text.startsWith("МФК на ТСО1 на АЗС2")) {
                     return (<center>
                         <W_tso_Rec_button text={text} title="Перезагрузка ПК" type_Body='restart_pc' el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels} />
                         <W_tso_camera WS="ws://172.23.16.18:9999" />
                     </center>);
-
                 } else if (text.startsWith("МФК на ТСО1 на АЗС1")) {
-
                     return (<center>
                         <W_tso_Rec_button text={text} title="Перезагрузка ПК" type_Body='restart_pc' el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels} />
                         <W_tso_camera WS="ws://172.23.16.18:9998" />
@@ -138,10 +134,6 @@ export default class single_coll extends React.Component {
                 } else {
                     return (<center><W_tso_Rec_button text={text} title="Перезагрузка ПК" type_Body='restart_pc' el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels} /></center>);
                 }
-
-
-
-                ///
             }
             else {
                 let _style = {

@@ -5,7 +5,7 @@ import { Stage, Layer, Rect, Text } from 'react-konva';
 import AZS_Image from '../../controls/AZS_Image.jsx'
 import Data_Property_PL from "./Data_Property_PL.jsx";
 
-const _Is_Run_WS = false;
+const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
 const _Debuge_Message = true;
 const _Debuge = false;
@@ -88,24 +88,21 @@ export default class pl_Head_new extends React.Component {
         this.SET_PROPS_PL = this.SET_PROPS_PL.bind(this);
         this.SET_VALUE_ODJ = this.SET_VALUE_ODJ.bind(this);
 
-        // WS
+        //  WS
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
+        this.restart = this.restart.bind(this);
         //  WS
 
         this.state = {
-
             OBJ: this.props.OBJ,
-            self_ID: this.props.OBJ.dvc_id,
-            dvc_text: this.props.OBJ.key_value,
-            status_text: "",
-
-            is_View: this.props.is_View,
-
             _Fuels: this.props._Fuels,
             list_data: this.props.list_data,
 
+            self_ID: this.props.OBJ.dvc_id,
+            dvc_text: this.props.OBJ.key_value,
+            status_text: "",
             message: "",
 
             //  WS
@@ -126,7 +123,6 @@ export default class pl_Head_new extends React.Component {
         }
     }
     componentDidUpdate(prevProps, prevState) {
-
         if (this.props.is_View != prevProps.is_View) {
             this.setState({ is_View: this.props.is_View }, this.is_Choose(this.props.visible));
         }
@@ -136,11 +132,6 @@ export default class pl_Head_new extends React.Component {
         if (this.props.OBJ != prevProps.OBJ) {
             this.setState({ OBJ: this.props.OBJ }, this.SET_PROPS_PL());
         }
-
-        /*         if (this.state.sliderValue !== prevState.sliderValue) {
-                    global.IS_PL_View = this.state.sliderValue;
-                }
-         */
     }
     componentWillUnmount() {
         if (this.state.connection != null) {
@@ -214,7 +205,6 @@ export default class pl_Head_new extends React.Component {
         }
     }
 
-
     // Команды
     async toock(el) {///Отправка команды
 
@@ -280,37 +270,22 @@ export default class pl_Head_new extends React.Component {
     // Команды
 
     // WS
-    /*   is_Choose(visible) {
-          if (visible) {
-              if (_Debug_Is_Run_WS) {
-                  alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-              }
-              this.stop_ws();
-          } else {
-              if (_Debug_Is_Run_WS) {
-                  alert(" is_Choose self_ID = " + this.state.visible + " - " + this.state.self_ID)
-              }
-              this.restart();
-          } 
-      }
-       async restart() {
-          try {
-              if (_Is_Run_WS) {
-                  if (this.state.connection != null && this.state.IsOpen) {
-                      if (_Debug_Is_Run_WS) {
-                          alert(" restart self_ID = " + this.state.visible + " - " + this.state.self_ID)
-                      }
-                      await this.state.connection.close(1000, "Hello Web Sockets!");
-                      this.setState({ IsOpen: false, connection: null, data: null });
-     
-                      await setInterval(() => this.start_ws(), 10000);
-     
-                  }
-              }
-          } catch (e) {
-          }
-      } */
 
+    restart() {
+        //alert("start_ws pl_Head_new");
+        if (_Is_Run_WS) {
+            if (this.state.connection != null && this.state.IsOpen) {
+                this.state.connection.close(1000, "Hello Web Sockets!");
+                this.setState({ IsOpen: false, connection: null, data: null });
+                /************************ */
+                //timerId = setInterval(() => this.start_ws(), 10000);
+
+                setTimeout(() => this.start_ws(), 1000);// 60000- 1мин
+
+                /************************ */
+            }
+        }
+    }
     start_ws(e) {
         if (_Is_Run_WS) {
             if (this.state.self_ID != null && !this.state.visible) {
@@ -350,27 +325,22 @@ export default class pl_Head_new extends React.Component {
                 if (_Debug_Is_Run_WS) {
                     alert(" OnOpen self_ID = " + this.state.visible + " - " + this.state.self_ID)
                 }
-
                 let m = new Array();
                 m.push(this.state.self_ID);
                 let MS = get_Json_String(m);
-
                 //let MS = get_Json_String(this.props.list_dvc_id);
                 this.state.connection.send(MS);
-                this.setState({ messages: "", IsOpen: true })
-
+                this.setState({ messages: "", IsOpen: true });
             }
         }
     }
     stop_ws(e) {
         try {
             if (this.state.connection != null || this.state.IsOpen) {
-
                 if (_Debug_Is_Run_WS) {
                     alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
                 }
                 this.state.connection.close(1000, "Hello Web Sockets!");
-
                 if (this.state.connection.readyState >= 2) {
                     this.setState({ connection: null, data: null, IsOpen: false });
                 }
@@ -386,25 +356,13 @@ export default class pl_Head_new extends React.Component {
             });
         }
     }
+
     // WS
 
     render() {
         let S_width = 120;
-        let S_height = 170;
-        let style_td = {
-            background: 'white',
-            minWidth: '20px',
-            width: '120px',
-            textAlign: 'center',
-            bgcolor: "black",
-            border: '1px solid #F0F0F0',
-            verticalAlign: 'center',
-            fontSize: "11px",
-            height: "25px",
-            align: "center",
+        let S_height = 175;
 
-            whiteSpace: "nowrap",
-        }
         let style_td_D = {
             background: 'white',
             textAlign: 'left',
@@ -419,7 +377,7 @@ export default class pl_Head_new extends React.Component {
 
         return (
             <center title={this.state.message}>
-                <Stage width={S_width} height={S_height} style={this.state.style_Stage}>
+                <Stage width={S_width} height={S_height} style={this.state.style_Stage} onDblClick={this.restart}>
                     <Layer>
 
                         <Text x={2} y={5} text={this.state.dvc_text} fontSize={10}
@@ -457,6 +415,7 @@ export default class pl_Head_new extends React.Component {
                             <tr>
                                 <td style={style_td_D}>{"self_ID - " + this.state.self_ID}</td>
                             </tr>
+
 
                             <tr>
                                 <td style={style_td_D}>{"crit - " + this.state.OBJ.crit}</td>

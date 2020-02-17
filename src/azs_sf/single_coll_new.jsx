@@ -9,6 +9,7 @@ import W_tso_chaild_First_new from './TSO/tso_chaild_First_new.jsx'
 import W_pl_Head from './PL/pl_Head_new.jsx'
 import W_trk_Head from './TRK/trk_Head_new.jsx'
 import W_tso_Head from './TSO/tso_Head_new.jsx'
+
 import W_tso_Head_chaild_new from './TSO/tso_Head_chaild_new.jsx'
 
 import W_Filter_Check_PL from './PL/Filter_Check_PL.jsx'
@@ -90,8 +91,8 @@ export default class single_coll_new extends React.Component {
                     let first_coll_fr = Get_PROPS_Single(this.props.list_type_dvc, 'fr', false);
                     return (
                         <>
-                            <Element name="test2" className="element" >
-                                <W_tso_chaild_First_new text_dvc={text} TYPE="fr" />
+                            <Element name="test25" className="element" >
+                                <W_tso_chaild_First_new text_dvc={text} />
                             </Element>
                             <center>
                                 <W_img_First OBJ={this.state.el} list_book={first_coll_fr} />
@@ -103,8 +104,8 @@ export default class single_coll_new extends React.Component {
                     let first_coll_cash = Get_PROPS_Single(this.props.list_type_dvc, 'cash', false);
                     return (
                         <>
-                            <Element name="test2" className="element" >
-                                <W_tso_chaild_First_new text_dvc={text} TYPE="cash" />
+                            <Element name="test24" className="element" >
+                                <W_tso_chaild_First_new text_dvc={text} />
                             </Element>
                             <center>
                                 <W_img_First OBJ={this.state.el} list_book={first_coll_cash} />
@@ -116,8 +117,8 @@ export default class single_coll_new extends React.Component {
                     let first_coll_td = Get_PROPS_Single(this.props.list_type_dvc, 'td', false);
                     return (
                         <>
-                            <Element name="test2" className="element" >
-                                <W_tso_chaild_First_new text_dvc={text} TYPE="td" />
+                            <Element name="test23" className="element" >
+                                <W_tso_chaild_First_new text_dvc={text} />
                             </Element>
                             <center>
                                 <W_img_First OBJ={this.state.el} list_book={first_coll_td} />
@@ -129,8 +130,8 @@ export default class single_coll_new extends React.Component {
                     let first_coll_msc = Get_PROPS_Single(this.props.list_type_dvc, 'msc', false);
                     return (
                         <>
-                            <Element name="test2" className="element" >
-                                <W_tso_chaild_First_new text_dvc={text} TYPE="msc" />
+                            <Element name="test22" className="element" >
+                                <W_tso_chaild_First_new text_dvc={text} />
                             </Element>
                             <center>
                                 <W_img_First OBJ={this.state.el} list_book={first_coll_msc} />
@@ -142,8 +143,8 @@ export default class single_coll_new extends React.Component {
                     let first_coll_cmd_mfc = Get_PROPS_Single(this.props.list_type_dvc, 'cmd_mfc', false);
                     return (
                         <>
-                            <Element name="test2" className="element" >
-                                <W_tso_chaild_First_new text_dvc={text} TYPE="cmd_mfc" />
+                            <Element name="test21" className="element" >
+                                <W_tso_chaild_First_new text_dvc={text} />
                             </Element>
                             <center>
                                 <W_img_First OBJ={this.state.el} list_book={first_coll_cmd_mfc} />
@@ -157,14 +158,15 @@ export default class single_coll_new extends React.Component {
                 }
             }
         } else {
-
             if (this.state.el.ID != 0 && this.state.el.key == "nm" && text != "") {
                 switch (this.state.el.type) {
                     case "azs": {//шапка AZS 
                         return (
                             <center>
                                 <W_azs_Head
-                                    OBJ={this.state.el} text={text} ID={this.state.el.ID} history={this.props.history} />
+                                    OBJ={this.state.el} text={text}
+                                    ID={this.state.el.ID} history={this.props.history}
+                                />
                             </center>);
                     }
                     case "pl": {
@@ -173,7 +175,8 @@ export default class single_coll_new extends React.Component {
                             <center>
                                 <W_pl_Head
                                     OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                    list_data={data_coll_pl} visible={this.props.visible} />
+                                    list_data={data_coll_pl} visible={this.props.visible}
+                                />
                             </center>);
                     }
                     case "pump": {//шапка ТРК 
@@ -182,18 +185,19 @@ export default class single_coll_new extends React.Component {
                             <center>
                                 <W_trk_Head
                                     OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                    list_data={data_coll_pump} visible={this.props.visible}
-                                    azs={this.props.azs} />
+                                    list_data={data_coll_pump} visible={this.props.visible} azs={this.props.azs}
+                                />
                             </center>);
                     }
                     case "tso": { //шапка TCO - CONN_STATE
                         let list_data_tso = Get_PROPS_Single(this.props.list_type_dvc, 'tso', true);
-                        return (<center>
-                            <W_tso_Head
-                                OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                list_data={list_data_tso} visible={this.props.visible}
-                                azs={this.props.azs} />
-                        </center>);
+                        return (
+                            <center>
+                                <W_tso_Head
+                                    OBJ={this.state.el} _Fuels={this.props.list_fuels}
+                                    list_data={list_data_tso} visible={this.props.visible} azs={this.props.azs}
+                                />
+                            </center>);
                     }
                     case "fr": {//шапка ФР 
                         let list_data_fr = Get_PROPS_Single(this.props.list_type_dvc, 'fr', true);
@@ -201,8 +205,8 @@ export default class single_coll_new extends React.Component {
                             <center>
                                 <W_tso_Head_chaild_new
                                     OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                    list_data={list_data_fr} visible={this.props.visible}
-                                    azs={this.props.azs} />
+                                    list_data={list_data_fr} visible={this.props.visible} azs={this.props.azs}
+                                />
                                 <W_tso_Rec_button
                                     IsButton={true} text={text}
                                     title="Перезагрузка ФР" type_Body='restart_fr'
@@ -216,8 +220,7 @@ export default class single_coll_new extends React.Component {
                             <center>
                                 <W_tso_Head_chaild_new
                                     OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                    list_data={list_data_cash} visible={this.props.visible}
-                                    azs={this.props.azs}
+                                    list_data={list_data_cash} visible={this.props.visible} azs={this.props.azs}
                                 />
                                 <W_tso_Rec_button
                                     IsButton={true} text={text}
@@ -228,34 +231,34 @@ export default class single_coll_new extends React.Component {
                     }
                     case "td": {//шапка ТУ 
                         let list_data_td = Get_PROPS_Single(this.props.list_type_dvc, 'td', true);
-                        return (<center>
-                            <W_tso_Head_chaild_new
-                                OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                list_data={list_data_td} visible={this.props.visible}
-                                azs={this.props.azs}
-                            />
-                        </center>);
+                        return (
+                            <center>
+                                <W_tso_Head_chaild_new
+                                    OBJ={this.state.el} _Fuels={this.props.list_fuels}
+                                    list_data={list_data_td} visible={this.props.visible} azs={this.props.azs}
+                                />
+                            </center>);
                     }
-
                     case "msc": {//шапка МФК 
                         let list_data_msc = Get_PROPS_Single(this.props.list_type_dvc, 'msc', true);
-                        return (<center>
-                            <W_tso_Head_chaild_new
-                                OBJ={this.state.el} _Fuels={this.props.list_fuels}
-                                list_data={list_data_msc} visible={this.props.visible} azs={this.props.azs}
-                            />
-                            <W_tso_Rec_button
-                                IsButton={true} text={text}
-                                title="Перезагрузка ПК" type_Body='restart_pc'
-                                el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels}
-                            />
-                            {text.startsWith("МФК на ТСО1 на АЗС2") &&
-                                <W_tso_camera WS="ws://172.23.16.18:9999" />
-                            }
-                            {text.startsWith("МФК на ТСО1 на АЗС1") &&
-                                <W_tso_camera WS="ws://172.23.16.18:9998" />
-                            }
-                        </center>);
+                        return (
+                            <center>
+                                <W_tso_Head_chaild_new
+                                    OBJ={this.state.el} _Fuels={this.props.list_fuels}
+                                    list_data={list_data_msc} visible={this.props.visible} azs={this.props.azs}
+                                />
+                                <W_tso_Rec_button
+                                    IsButton={true} text={text}
+                                    title="Перезагрузка ПК" type_Body='restart_pc'
+                                    el={this.state.el} el_azsS={this.props.el_azsS} _Fuels={this.props.list_fuels}
+                                />
+                                {text.startsWith("МФК на ТСО1 на АЗС2") &&
+                                    <W_tso_camera WS="ws://172.23.16.18:9999" />
+                                }
+                                {text.startsWith("МФК на ТСО1 на АЗС1") &&
+                                    <W_tso_camera WS="ws://172.23.16.18:9998" />
+                                }
+                            </center>);
                     }
                     case "cmd_mfc": {
                         let list_data_cmd_mfc = Get_PROPS_Single(this.props.list_type_dvc, 'cmd_mfc', true);
@@ -268,6 +271,7 @@ export default class single_coll_new extends React.Component {
                             </center>);
                     }
                     default: {
+                        //return (<>{text}</>);
                         return (<> -- -- </>);
                     }
                 }

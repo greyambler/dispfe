@@ -1,9 +1,6 @@
 import React from 'react';
 
-import { Stage, Layer, Rect, Text, Circle, Shape, Image } from 'react-konva';
-
-import { get_Num, createGuid, get_Json_String } from '../core/core_Function.jsx'
-
+import { Stage, Layer } from 'react-konva';
 
 import Data_Property_PL from "./PL/Data_Property_PL.jsx";
 import Data_Property_TRK from "./TRK/Data_Property_TRK.jsx";
@@ -18,7 +15,6 @@ export default class img_First_new extends React.Component {
         super(props);
         this.state = {
             list_book: this.props.list_book,
-            is_View: this.props.is_View,
         }
     }
     componentDidUpdate(prevProps) {
@@ -31,16 +27,6 @@ export default class img_First_new extends React.Component {
     }
 
     render() {
-        let style_td = {
-            background: 'white',
-            textAlign: 'right',
-            bgcolor: "black",
-            border: '1px solid #F0F0F0',
-            height: "25px",
-            align: "right",
-
-            whiteSpace: "nowrap",
-        }
         let style_td_D = {
             background: 'white',
             textAlign: 'left',
@@ -53,7 +39,6 @@ export default class img_First_new extends React.Component {
             //whiteSpace: "nowrap",
         }
         let OBJ = this.props.OBJ;
-
         return (
             <center>
                 {OBJ.main_type == "pl" &&
@@ -81,9 +66,6 @@ export default class img_First_new extends React.Component {
                                 _W='50' _H='100' _X={12} _Y={22} />
                         </Layer>
                     </Stage>
-                }
-                {OBJ.type == "fr" && this.props.TYPE != null &&
-                    <>tts</>
                 }
 
                 {_Debuge &&
@@ -120,36 +102,16 @@ export default class img_First_new extends React.Component {
  */}                        </tbody>
                     </table>
                 }
+
                 {OBJ.main_type == "pl" &&
                     <Data_Property_PL list_book={this.props.list_book} is_First_Coll={true} />
                 }
                 {OBJ.main_type == "pump" &&
-                    <Data_Property_TRK list_book={this.props.list_book} is_First_Coll={true}/>
+                    <Data_Property_TRK list_book={this.props.list_book} is_First_Coll={true} />
                 }
                 {OBJ.main_type == "tso" &&
-                    <Data_Property_TSO list_book={this.props.list_book} is_First_Coll={true}/>
+                    <Data_Property_TSO list_book={this.props.list_book} is_First_Coll={true} />
                 }
-
-                {/*this.state.is_View && this.state.list_book != null &&
-                    <table width="99%">
-                        <tbody>
-                            {
-                                this.state.list_book.map(item => {
-                                    return (
-                                        <tr key={createGuid()}>
-                                            <td key={createGuid()} style={style_td}>
-                                            <W_prop_value item={item} coll_let={20} />
-                                                
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
-
-                        </tbody>
-                    </table>
-                */}
-
             </center>
         );
     }

@@ -5,7 +5,7 @@ import { Stage, Layer, Rect, Text } from 'react-konva';
 import AZS_Image from '../../controls/AZS_Image.jsx'
 import Data_Property_TRK from "./Data_Property_TRK.jsx";
 
-const _Is_Run_WS = false;
+const _Is_Run_WS = true;
 const _Debug_Is_Run_WS = false;
 const _Debuge_Message = true;
 const _Debuge = false;
@@ -110,7 +110,6 @@ function get_GoGet(state_trk) {
         default: { return false; }//"Нет связи"; }
     }
 }
-
 function get_lock(el) {
     let Image = '/images/Lock.png';
     switch (parseInt(el.state_trk)) {
@@ -166,7 +165,6 @@ function get_dvc_Image(el) {
     }
 }
 
-
 export default class trk_Head_new extends React.Component {
     constructor(props) {
         super(props);
@@ -180,22 +178,18 @@ export default class trk_Head_new extends React.Component {
         this.start_ws = this.start_ws.bind(this);
         this.stop_ws = this.stop_ws.bind(this);
         this.OnOpen = this.OnOpen.bind(this);
-        
+        this.restart = this.restart.bind(this);
         // WS
 
         this.state = {
             OBJ: this.props.OBJ,
+            _Fuels: this.props._Fuels,
+            list_data: this.props.list_data,
+            azs: this.props.azs,
+
             self_ID: this.props.OBJ.dvc_id,
             dvc_text: this.props.OBJ.key_value,
             status_text: "",
-
-            is_View: this.props.is_View,
-
-            _Fuels: this.props._Fuels,
-            list_data: this.props.list_data,
-
-            azs: this.props.azs,
-
             message: "",
 
             // WS
@@ -348,7 +342,6 @@ export default class trk_Head_new extends React.Component {
 
 
     // Команды
-
     async toock(el) {///Отправка команды
 
         let rss = POST;
@@ -410,13 +403,25 @@ export default class trk_Head_new extends React.Component {
     show_Message(text) {
         this.setState({ message: text });
     }
-    
     // Команды
 
     // WS
+    restart() {
+        //alert("start_ws trk_Head_new");
+        if (_Is_Run_WS) {
+            if (this.state.connection != null && this.state.IsOpen) {
+                this.state.connection.close(1000, "Hello Web Sockets!");
+                this.setState({ IsOpen: false, connection: null, data: null });
+                /************************ */
+                //timerId = setInterval(() => this.start_ws(), 10000);
 
-    start_ws(e) {
+                setTimeout(() => this.start_ws(), 1000);// 60000- 1мин
 
+                /************************ */
+            }
+        }
+    }
+    start_ws(e) {        
         if (_Is_Run_WS) {
             if (this.state.self_ID != null && !this.state.visible) {
                 if (this.state.connection == null) {
@@ -439,8 +444,8 @@ export default class trk_Head_new extends React.Component {
                                     let r = 0;
                                 }
                             } catch (error) {
-                                console.log('******WS******************' + error);
-                                console.log('******WS******************' + evt.data);
+                                console.log('*WS*' + error);
+                                console.log('*WS*' + evt.data);
                             }
                         }
                     }
@@ -454,21 +459,17 @@ export default class trk_Head_new extends React.Component {
                 if (_Debug_Is_Run_WS) {
                     alert(" OnOpen self_ID = " + this.state.visible + " - " + this.state.self_ID)
                 }
-
                 let m = new Array();
                 m.push(this.state.self_ID);
                 let MS = get_Json_String(m);
                 this.state.connection.send(MS);
-                this.setState({ messages: "", IsOpen: true })
-
+                this.setState({ messages: "", IsOpen: true });
             }
         }
     }
     stop_ws(e) {
-
         try {
             if (this.state.connection != null || this.state.IsOpen) {
-
                 if (_Debug_Is_Run_WS) {
                     alert(" stop_ws self_ID = " + this.state.visible + " - " + this.state.self_ID)
                 }
@@ -478,7 +479,6 @@ export default class trk_Head_new extends React.Component {
                 }
             }
         } catch (e) {
-
         }
     }
     add_messages(e) {
@@ -495,20 +495,7 @@ export default class trk_Head_new extends React.Component {
     render() {
         let S_width = 120;
         let S_height = 202;
-        let style_td = {
-            background: 'white',
-            minWidth: '20px',
-            width: '120px',
-            textAlign: 'center',
-            bgcolor: "black",
-            border: '1px solid #F0F0F0',
-            verticalAlign: 'center',
-            fontSize: "11px",
-            height: "25px",
-            align: "center",
 
-            whiteSpace: "nowrap",
-        }
         let style_td_D = {
             background: 'white',
             textAlign: 'left',
@@ -520,7 +507,7 @@ export default class trk_Head_new extends React.Component {
         }
         return (
             <center title={this.state.message}>
-                <Stage width={S_width} height={S_height} style={this.state.style_Stage}>
+                <Stage width={S_width} height={S_height} style={this.state.style_Stage} onDblClick={this.restart}>
                     <Layer>
 
                         <Text x={2} y={5} text={this.state.dvc_text} fontSize={10}
@@ -573,7 +560,6 @@ export default class trk_Head_new extends React.Component {
                             <tr>
                                 <td style={style_td_D}>{"self_ID - " + this.state.OBJ.dvc_id}</td>
                             </tr>
-
 
 
                             <tr>

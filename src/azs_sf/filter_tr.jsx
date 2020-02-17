@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Divider, Grid, Image, Segment } from 'semantic-ui-react'
+
+//import { Is_VIEW, Get_VIEW } from '../core/core_Function.jsx'
+
+import { Divider, Grid, Image, Segment, } from 'semantic-ui-react'
 
 
 export default class filter_tr extends React.Component {
@@ -12,17 +15,22 @@ export default class filter_tr extends React.Component {
             _up: this.props.UP,
             _arrow: this.props.UP ? "images/arrow_Up.png" : "images/arrow_Down.png",
             type: this.props.type,
+            //_Is_VIEW:false,
         }
     }
 
     Click() {
+
         let _UP = !this.state._up;
         if (_UP) {
             this.setState({ _arrow: "images/arrow_Up.png" });
         } else {
             this.setState({ _arrow: "images/arrow_Down.png" });
         }
+        //this.setState({ _up: _UP });
+        //global.IS_PL_View = _UP;
         this.props.setFilter(_UP, this.state.type);
+
     }
 
     render() {
@@ -30,7 +38,7 @@ export default class filter_tr extends React.Component {
             background: '#F0F0F0',
             height: '30px',
             width: '100%',
-            minWidth:'200px',
+            minWidth: '200px',
             verticalAlign: 'top',
         }
         let _style_td = {

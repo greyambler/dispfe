@@ -1,5 +1,8 @@
 import React from 'react';
-import { demoAsyncCall, RSS_List_Main, Get_Main_PROPS } from './core/core_Function.jsx'
+
+import { Element, animateScroll as scroll } from 'react-scroll'
+
+import { demoAsyncCall, RSS_List_Main, RSS_AZS, Get_Main_PROPS } from './core/core_Function.jsx'
 import W_main_azs from './azs_sf/w_main_azs.jsx'
 
 const _Debuge = false;

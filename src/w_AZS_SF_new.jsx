@@ -1,5 +1,7 @@
 import React from 'react';
-import { RSS_List_Main, Get_FIRST_COLL_Single } from './core/core_Function.jsx'
+
+import { RSS_List_Main, Get_FIRST_COLL_Single, } from './core/core_Function.jsx'
+
 import W_main_azs_new from './azs_sf/w_main_azs_new.jsx'
 
 const _Debuge = false;
@@ -10,22 +12,27 @@ export default class w_AZS_SF_new extends React.Component {
         super(props);
         this.tick_book = this.tick_book.bind(this);
         this.state = {
-            loading: true,//окно ожидания
-            list_type_dvc: null, list_fuels: null, list_book_row: null,
+            DVC: null,
+            list_type_dvc: null,
+            list_fuels: null,
+            list_book_row: null,
         }
     }
 
     componentDidMount() {
-        this.tick_book(this.props.DVC);
+        this.setState({ DVC: this.props.DVC }, this.tick_book);
     }
     componentDidUpdate(prevProps) {
         if (this.props.DVC != prevProps.DVC) {
-            this.tick_book(this.props.DVC);
+            this.setState({ DVC: this.props.DVC }, this.tick_book);
+        }
+        if (this.props.visible != prevProps.visible) {
+            this.setState({ visible: this.props.visible }, this.tick_book);
         }
     }
 
-    async tick_book(DVC) {
-        if (DVC != null) {
+    async tick_book() {
+        if (this.state.DVC != null && !this.state.visible) {
             let rss = RSS_List_Main;
             var myRequest = new Request(rss);
             try {
@@ -40,7 +47,10 @@ export default class w_AZS_SF_new extends React.Component {
                 );
                 const Jsons = await response.json();
                 if (response.ok) {
-                    this.setState({ list_type_dvc: Jsons.dvctyptree, list_fuels: Jsons.fuel, list_book_row: Get_FIRST_COLL_Single(Jsons.dvctyptree, DVC) });
+                    this.setState({
+                        list_type_dvc: Jsons.dvctyptree, list_fuels: Jsons.fuel,
+                        list_book_row: Get_FIRST_COLL_Single(Jsons.dvctyptree, this.state.DVC)
+                    });
                 }
                 else {
                     throw Error(response.statusText);
@@ -53,6 +63,8 @@ export default class w_AZS_SF_new extends React.Component {
                 if (_Debuge_Alert)
                     alert(error);
             }
+        } else {
+            this.setState({ list_type_dvc: null, list_fuels: null, list_book_row: null });
         }
     }
 
@@ -60,16 +72,21 @@ export default class w_AZS_SF_new extends React.Component {
         let _Width = window.innerWidth;
         let _Height = window.innerHeight;
 
-        if (this.state.list_type_dvc != null && this.state.list_fuels != null &&
-            this.state.list_book_row != null && this.props.list_azs_check && this.props.list_azs_check.length > 0) {
+        if (this.state.list_type_dvc != null && Array.isArray(this.state.list_type_dvc) &&
+            this.state.list_fuels != null && Array.isArray(this.state.list_fuels) &&
+            this.state.list_book_row != null && Array.isArray(this.state.list_book_row) &&
+            this.props.list_azs_check && Array.isArray(this.props.list_azs_check) &&
+            this.props.list_azs_check.length > 0 && !this.state.visible) {
             return (
                 <W_main_azs_new
+                    history={this.props.history}
 
                     list_type_dvc={this.state.list_type_dvc}
+                    list_azs_check={this.props.list_azs_check}
+
+
                     list_fuels={this.state.list_fuels}
                     list_book_row={this.state.list_book_row}
-
-                    list_azs_check={this.props.list_azs_check}
 
                     visible={this.props.visible}
                 />

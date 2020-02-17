@@ -5,8 +5,9 @@ import useGlobal from "../../core/useGlobal.jsx";
 function Filter_Check() {
     const [globalState, globalActions] = useGlobal();
     const { showdata_tso } = globalState.counters;
-    const _check = el => { globalActions.showdata_tso.Showdata_TSO(!showdata_tso); };
-
+    const _check = el => {
+        globalActions.showdata_tso.Showdata_TSO(!showdata_tso);
+    };
     if (showdata_tso) {
         return (<Image src="images/arrow_Up.png" onClick={_check} />);
     } else {
@@ -19,8 +20,6 @@ export default class Filter_Check_TSO extends React.Component {
         super(props);
         this.state = {
             text_dvc: this.props.text_dvc,
-            _up: this.props.UP,
-            _arrow: this.props.UP ? "images/arrow_Up.png" : "images/arrow_Down.png",
             type: this.props.type,
         }
     }
